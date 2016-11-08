@@ -1,0 +1,31 @@
+{
+  "name": "campsi-api",
+  "version": "1.0.0",
+  "description": "Configurable API for managing and publishing document-oriented content",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/campsi/api.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/campsi/api/issues"
+  },
+  "homepage": "https://github.com/campsi/api#readme",
+  "dependencies": {
+    "async": "^2.1.2",
+    "bunyan": "^1.8.4",
+    "campsi-base-components": "^1.0.1",
+    "campsi-core": "^0.1.5",
+    "campsi-find-references": "^1.0.1",
+    "command-line-args": "^3.0.2",
+    "config": "^1.24.0",
+    "for-in": "^0.1.6",
+    "mongodb": "^2.2.11",
+    "restify": "^4.2.0"
+  }
+}
