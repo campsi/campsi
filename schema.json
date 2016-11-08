@@ -92,15 +92,11 @@
         }
     },
     "users": {
-        "romainbessuges@gmail.com": {
-            "email": "romainbessuges@gmail.com",
-            "id": "romainbessuges@gmail.com",
+        "admin@campsi.io": {
             "name": "Romain Besssuges-Meusy",
             "role": "admin"
         },
-        "dorseuil.delphine@gmail.com": {
-            "email": "dorseuil.delphine@gmail.com",
-            "id": "dorseuil.delphine@gmail.com",
+        "editor@campsi.io": {
             "name": "Delphine Dorseuil",
             "role": "admin"
         }
