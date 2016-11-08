@@ -1,0 +1,185 @@
+{
+    "name": "arezzo",
+    "title": "Arezzo",
+    "types": {
+        "collection": {
+            "defaultState": "published",
+            "states": {
+                "published": {
+                    "name": "published",
+                    "label": "En ligne",
+                    "validate": true
+                },
+                "working_draft": {
+                    "name": "working_draft",
+                    "label": "Brouillon",
+                    "validate": false
+                },
+                "archived": {
+                    "name": "archived",
+                    "label": "Archivés",
+                    "validate": false
+                }
+            },
+            "permissions": {
+                "admin": {
+                    "published": "*",
+                    "working_draft": "*",
+                    "archive": "*"
+                },
+                "public": {
+                    "published": "GET"
+                }
+            }
+        },
+        "document": {
+            "states": {
+                "published": {
+                    "name": "published",
+                    "label": "En ligne",
+                    "validate": true
+                },
+                "draft": {
+                    "name": "draft",
+                    "label": "Brouillon",
+                    "validate": false
+                }
+            },
+            "permissions": {
+                "admin": {
+                    "published": "GET,PUT",
+                    "draft": "GET,PUT"
+                },
+                "public": {
+                    "published": "GET"
+                }
+            }
+        },
+        "form": {
+            "states": {
+                "submitted": {
+                    "name": "submitted",
+                    "label": "Reçu",
+                    "validate": true
+                },
+                "read": {
+                    "name": "read",
+                    "label": "Lu",
+                    "validate": false
+                },
+                "replied": {
+                    "name": "replied",
+                    "label": "Répondu",
+                    "validate": false
+                },
+                "archived": {
+                    "name": "archived",
+                    "label": "Archivé",
+                    "validate": false
+                }
+            },
+            "permissions": {
+                "admin": {
+                    "read": "*",
+                    "replied": "*",
+                    "submitted": "*",
+                    "archived": "*"
+                },
+                "public": {
+                    "submitted": "POST"
+                }
+            }
+        }
+    },
+    "users": {
+        "romainbessuges@gmail.com": {
+            "email": "romainbessuges@gmail.com",
+            "id": "romainbessuges@gmail.com",
+            "name": "Romain Besssuges-Meusy",
+            "role": "admin"
+        },
+        "dorseuil.delphine@gmail.com": {
+            "email": "dorseuil.delphine@gmail.com",
+            "id": "dorseuil.delphine@gmail.com",
+            "name": "Delphine Dorseuil",
+            "role": "admin"
+        }
+    },
+    "resources": {
+        "pizzas": {
+            "label": "La carte des pizzas",
+            "type": "collection",
+            "fields": [
+                {
+                    "name": "name",
+                    "label": "Nom",
+                    "type": "text",
+                    "required": true
+                },
+                {
+                    "name": "ingredients",
+                    "label": "Ingrédients",
+                    "type": "array",
+                    "items": {
+                        "type": "text"
+                    }
+                }
+            ]
+        },
+        "contact": {
+            "label": "Formulaire de contact du site web",
+            "type": "form",
+            "fields": [
+                {
+                    "name": "email",
+                    "type": "text"
+                },
+                {
+                    "name": "message",
+                    "type": "text/area"
+                }
+            ]
+        },
+        "opening_hours": {
+            "label": "Jours et horaires de contact",
+            "type": "document",
+            "fields": [
+                {
+                    "name": "days",
+                    "label": "Jours d'ouverture",
+                    "type": "checkbox/group",
+                    "values": [
+                        {
+                            "label": "Lundi",
+                            "value": "monday"
+                        },
+                        {
+                            "label": "Mardi",
+                            "value": "tuesday"
+                        },
+                        {
+                            "label": "Mercredi",
+                            "value": "wednesday"
+                        },
+                        {
+                            "label": "Jeudi",
+                            "value": "thursday"
+                        },
+                        {
+                            "label": "Vendredi",
+                            "value": "friday"
+                        },
+                        {
+                            "label": "Samedi",
+                            "value": "saturday"
+                        },
+                        {
+                            "label": "Dimanche",
+                            "value": "sunday"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
