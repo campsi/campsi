@@ -1,61 +1,10 @@
 'use strict';
 
-const builder = require('./builder');
-const helpers = require('./helpers');
 const async = require('async');
-const ObjectId = require('mongodb').ObjectId;
-const findRefs = require('campsi-find-references');
 
-const onValidationError = function (res) {
-    return function (errors) {
-        helpers.error(res, {
-            message: 'Validation Error',
-            fields: errors
-        });
-    }
-};
-
-const embedRelatedDocuments = function (req, doc) {
-    return new Promise((resolve, reject)=> {
-        let error;
-        let cache = {};
-        let _id;
-
-        async.eachOf(req.resource.rels || {}, (relationship, name, cb)=> {
-            if (relationship.embed || (req.query.embed && req.query.embed.indexOf(name) > -1)) {
-                let references = findRefs(doc, relationship.path.split('.'));
-                async.each(references, (reference, refCb)=> {
-                    let resource = req.schema.resources[relationship.resource];
-                    _id = reference.get();
-
-                    if (typeof cache[_id] !== 'undefined') {
-                        reference.set(cache[_id]);
-                        return refCb();
-                    }
-
-                    resource.collection.findOne(
-                        {_id: new ObjectId(_id)},
-                        builder.select({resource: resource, user: req.user}),
-                        (err, subDoc)=> {
-                            cache[_id] = subDoc.states[resource.defaultState].data;
-                            reference.set(cache[_id]);
-                            refCb();
-                        }
-                    );
-                }, cb);
-            } else {
-                cb();
-            }
-        }, ()=> {
-            return (error) ? reject() : resolve();
-        })
-    });
-};
-
-
-module.exports.getResources = function getResources(req, res) {
-    helpers.json(res, Object.keys(req.schema.resources));
-};
+const builder = require('../modules/queryBuilder');
+const helpers = require('../modules/responseHelpers');
+const embedDocs = require('../modules/embedDocs');
 
 /**
  *
@@ -63,7 +12,7 @@ module.exports.getResources = function getResources(req, res) {
  * @param {Resource} req.resource
  * @param res
  */
-module.exports.getAdminDocs = function getAdminDocs(req, res) {
+module.exports.getResourceSchema = function getResourceSchema(req, res) {
     const cursor = req.resource.collection.find({});
     let schema = {
         label: req.resource.label,
@@ -106,7 +55,7 @@ module.exports.getDocs = function getDocs(req, res) {
         cursor.limit(100).toArray((err, docs) => {
             result.docs = docs.map((doc)=> doc.states[req.state]);
             async.each(result.docs, (doc, cb)=> {
-                embedRelatedDocuments(req, doc.data).then(cb).catch(cb);
+                embedDocs(req, doc.data).then(cb).catch(cb);
             }, ()=> {
                 helpers.json(res, result);
             });
@@ -125,7 +74,7 @@ module.exports.postDoc = function postDoc(req, res) {
         req.resource.collection.insert(doc, (err, result)=> {
             helpers.json(res, result);
         });
-    }).catch(onValidationError(res));
+    }).catch(helpers.validationError(res));
 };
 
 module.exports.putDocState = function putDocState(req, res) {
@@ -141,7 +90,7 @@ module.exports.putDocState = function putDocState(req, res) {
             req.resource.collection.updateOne(req.filter, ops, function (err) {
                 return helpers.error(res, err) ? null : res.send(200);
             });
-        }).catch(onValidationError(res));
+        }).catch(helpers.validationError(res));
     };
 
     const stateTo = req.resource.states[req.body.to];
@@ -196,7 +145,7 @@ module.exports.getDoc = function getDoc(req, res) {
             return helpers.notFound(res)
         }
 
-        embedRelatedDocuments(req, doc.states[req.state].data)
+        embedDocs(req, doc.states[req.state].data)
             .then(()=> helpers.json(res, doc.states[req.state]));
     });
 };

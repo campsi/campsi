@@ -1,6 +1,17 @@
 {
     "name": "arezzo",
     "title": "Arezzo",
+    "roles": {
+        "admin": {
+            "label": "Administrateur",
+            "auth": true,
+            "admin": true
+        },
+        "public": {
+            "label": "Public",
+            "auth": false
+        }
+    },
     "types": {
         "collection": {
             "defaultState": "published",

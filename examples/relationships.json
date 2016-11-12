@@ -2,6 +2,16 @@
     "name": "relationships",
     "title": "Relationships Example",
     "users": { },
+    "roles": {
+        "admin": {
+            "label": "Administrateur",
+            "auth": true
+        },
+        "public": {
+            "label": "Public",
+            "auth": false
+        }
+    },
     "types": {
         "collection": {
             "defaultState": "published",

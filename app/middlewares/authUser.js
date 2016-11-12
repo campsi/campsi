@@ -1,6 +1,6 @@
 'use strict';
 
-const helpers = require('../helpers');
+const helpers = require('../modules/responseHelpers');
 
 /**
  *
@@ -24,6 +24,7 @@ module.exports = function authUser(config, db) {
     return (req, res, next)=> {
         if (req.authorization.basic) {
             let email = req.authorization.basic.username;
+
             if (typeof config.users[email] !== 'undefined') {
                 req.user = config.users[email];
             }

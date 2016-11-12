@@ -1,14 +1,15 @@
 'use strict';
 
 const ObjectID = require('mongodb').ObjectID;
-const helpers = require('../helpers');
+const helpers = require('../modules/responseHelpers');
 
 /**
  *
  * @param {Schema} schema
+ * @param {Object} [db]
  * @returns {middleware}
  */
-module.exports = function parseParams(schema) {
+module.exports = function parseParams(schema, db) {
 
     function middleware(req, res, next) {
 
@@ -39,6 +40,11 @@ module.exports = function parseParams(schema) {
                 req.state = req.resource.defaultState;
             }
         }
+
+        if (req.params.role && typeof schema.roles[req.params.role] === 'undefined') {
+            return helpers.notFound(res);
+        }
+
         next();
     }
 

@@ -4,7 +4,8 @@
   "description": "Configurable API for managing and publishing document-oriented content",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,9 @@
     "config": "^1.24.0",
     "for-in": "^0.1.6",
     "mongodb": "^2.2.11",
+    "passport": "^0.3.2",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
     "restify": "^4.2.0"
   }
 }
