@@ -49,6 +49,7 @@ States represent the different stages in a document lifecycle, like `published`,
 | `DELETE` | delete the state for the document                                            |
 
 **A document can be in different states at the same time**, for example: 
+
 1. the `published` version, visible on the website and the mobile app by everyone
 2. the `waiting_for_approval` version that has to be validated by an admin
 3. the new `draft` version an editor is already working on.
