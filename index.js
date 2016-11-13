@@ -11,6 +11,7 @@
  @property {Object<String,Relationship>} rels
  @property {Object} permissions
  @property {Object} collection
+ @property {Webhook} webhooks
  */
 
 /**
@@ -53,6 +54,20 @@
  * @property {String} role
  */
 
+
+/**
+ * @name Webhook
+ * @type {Object}
+ * @property {String} on
+ * @property {String} method
+ * @property {String} uri
+ * @property {Boolean} payload
+ * @property {Array<String>} states
+ * @property {Object<String, String>} headers
+ */
+
+
+
 const restify = require('restify');
 const parseJSON = require('./app/modules/parseJSON');
 const config = require('config');
@@ -78,7 +93,7 @@ server.use([
     restify.authorizationParser(),
     restify.fullResponse(),
     restify.CORS(),
-    restify.queryParser({mapParams: false}),
+    restify.queryParser({mapParams: false, allowDots: false}),
     restify.jsonBodyParser({mapParams: false}),
     restify.pre.sanitizePath()
 ]);

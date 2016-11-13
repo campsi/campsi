@@ -33,6 +33,20 @@
         "categories": {
             "type": "collection",
             "label": "Categories",
+            "webhooks": [
+                {
+                    "on": "POST,PUT,DELETE",
+                    "states": ["published"],
+                    "uri": "http://127.0.0.1:3001",
+                    "method": "POST",
+                    "payload": true,
+                    "retry": 5,
+                    "timeout": 20,
+                    "headers": {
+                        "Authorization": "Basic YWRtaW5AY2FtcHNpLmlvOnBhc3N3b3Jk"
+                    }
+                }
+            ],
             "fields": [
                 {
                     "type": "text",

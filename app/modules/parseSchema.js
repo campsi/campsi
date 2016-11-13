@@ -4,6 +4,12 @@ const async = require('async');
 const Campsi = require('campsi-core');
 require('campsi-base-components');
 
+/**
+ *
+ * @param {Schema} schema
+ * @param db
+ * @returns {Promise}
+ */
 module.exports = function (schema, db) {
     return new Promise((resolve, reject)=> {
         async.eachOf(schema.resources, function (resource, name, cb) {

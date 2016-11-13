@@ -1,5 +1,6 @@
 'use strict';
 
+const forIn = require('for-in');
 
 function join(...properties) {
     return properties.join('.');
@@ -42,8 +43,17 @@ function validate(model, doc, doValidate) {
 }
 
 module.exports.find = function find(options) {
+    let state = getStateFromOptions(options);
+    let filter = {};
 
-    return {}
+    if (options.query) {
+        forIn(options.query, (val, prop)=> {
+            if (prop.indexOf('data.') === 0) {
+                filter[join('states', state.name, prop)] = val;
+            }
+        });
+    }
+    return filter;
 };
 
 module.exports.select = function select(options) {

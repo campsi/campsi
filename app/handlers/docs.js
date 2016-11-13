@@ -1,50 +1,41 @@
 'use strict';
 
-const async = require('async');
-
 const builder = require('../modules/queryBuilder');
 const helpers = require('../modules/responseHelpers');
 const embedDocs = require('../modules/embedDocs');
+const paginateCursor = require('../modules/paginateCursor');
+const sortCursor = require('../modules/sortCursor');
+const sendWebhook = require('../modules/sendWebhook');
 
-/**
- *
- * @param req
- * @param {Resource} req.resource
- * @param res
- */
-module.exports.getResourceSchema = function getResourceSchema(req, res) {
-    const cursor = req.resource.collection.find({});
-    let schema = {
-        label: req.resource.label,
-        states: req.resource.states,
-        defaultState: req.resource.defaultState,
-        permissions: req.resource.permissions,
-        fields: req.resource.fields,
-        docs: []
+const onUpdate = (req, res)=> (err, result) => {
+    if (err){
+        return helpers.error(res, err);
+    }
+
+    if (result.modifiedCount !== 1) {
+        return helpers.notFound(res);
+    }
+
+    const output = {
+        id: req.params.id,
+        state: req.state,
+        data: req.body
     };
-    cursor.count((countErr, count)=> {
-        cursor.skip(0).limit(100).toArray((err, docs) => {
-            if (helpers.error(err) || helpers.error(countErr)) return;
-            schema.docs = docs;
-            schema.count = count;
-            helpers.json(res, schema);
-        });
-    });
+    helpers.json(res, output);
+    sendWebhook(req, output);
 };
 
 module.exports.getDocs = function getDocs(req, res) {
 
-    const query = builder.find({
+    const queryBuilderOptions = {
         resource: req.resource,
         user: req.user,
-        query: req.query
-    });
+        query: req.query,
+        state: req.state
+    };
 
-    const fields = builder.select({
-        resource: req.resource,
-        user: req.user,
-        query: req.query
-    });
+    const query = builder.find(queryBuilderOptions);
+    const fields = builder.select(queryBuilderOptions);
 
     const cursor = req.resource.collection.find(query, fields);
 
@@ -52,12 +43,14 @@ module.exports.getDocs = function getDocs(req, res) {
     cursor.count((err, count)=> {
         result.count = count;
         result.label = req.resource.label;
-        cursor.limit(100).toArray((err, docs) => {
-            result.docs = docs.map((doc)=> doc.states[req.state]);
-            async.each(result.docs, (doc, cb)=> {
-                embedDocs(req, doc.data).then(cb).catch(cb);
-            }, ()=> {
-                helpers.json(res, result);
+
+        paginateCursor(cursor, req.query);
+        sortCursor(cursor, req);
+
+        cursor.toArray((err, docs) => {
+            result.docs = docs.map((doc)=> Object.assign({id: doc._id}, doc.states[req.state]));
+            embedDocs.many(req, result.docs).then(()=> {
+                helpers.json(res, result)
             });
         });
     });
@@ -69,10 +62,16 @@ module.exports.postDoc = function postDoc(req, res) {
         user: req.user,
         body: req.body,
         resource: req.resource,
-        state: req.params.state
+        state: req.state
     }).then((doc)=> {
         req.resource.collection.insert(doc, (err, result)=> {
-            helpers.json(res, result);
+            let output = Object.assign({
+                state: req.state,
+                id: result.ops[0]._id
+            }, result.ops[0].states[req.state]);
+
+            helpers.json(res, output);
+            sendWebhook(req, output);
         });
     }).catch(helpers.validationError(res));
 };
@@ -87,9 +86,7 @@ module.exports.putDocState = function putDocState(req, res) {
             resource: req.resource,
             user: req.user
         }).then((ops)=> {
-            req.resource.collection.updateOne(req.filter, ops, function (err) {
-                return helpers.error(res, err) ? null : res.send(200);
-            });
+            req.resource.collection.updateOne(req.filter, ops, onUpdate(req, res));
         }).catch(helpers.validationError(res));
     };
 
@@ -104,15 +101,14 @@ module.exports.putDocState = function putDocState(req, res) {
         helpers.error(res, {message: 'Undefined state', state: req.body.from});
     }
 
-
-    if (stateTo.validate) {
-        req.resource.collection.findOne(req.filter, (err, doc) => {
-            req.doc = doc.states[req.body.from].data;
-            doSetState();
-        });
-    } else {
-        doSetState();
+    if (!stateTo.validate) {
+        return doSetState();
     }
+
+    req.resource.collection.findOne(req.filter, (err, doc) => {
+        req.doc = doc.states[req.body.from].data;
+        doSetState();
+    });
 };
 
 // modify a doc
@@ -120,12 +116,10 @@ module.exports.putDoc = function putDoc(req, res) {
     builder.update({
         body: req.body,
         resource: req.resource,
-        state: req.params.state,
+        state: req.state,
         user: req.user
     }).then((ops)=> {
-        req.resource.collection.updateOne(req.filter, ops, function (err, result) {
-            return helpers.json(res, result);
-        });
+        req.resource.collection.updateOne(req.filter, ops, onUpdate(req, res));
     }).catch((err)=> {
         return helpers.error(res, err);
     });
@@ -145,7 +139,7 @@ module.exports.getDoc = function getDoc(req, res) {
             return helpers.notFound(res)
         }
 
-        embedDocs(req, doc.states[req.state].data)
+        embedDocs.one(req, doc.states[req.state].data)
             .then(()=> helpers.json(res, doc.states[req.state]));
     });
 };
