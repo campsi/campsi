@@ -25,14 +25,17 @@ Manage and expose **document-oriented** content through a configurable RESTful *
 #### Authentification & authorization
 - [x] Role-Based Access-Control
 - [x] Generate invitation tokens by role
-- [ ] Passport integration
-- [ ] HTTP Basic Auth
-- [ ] Custom OAuth 2.0 provider
+- [x] Passport integration
+- [x] Implement any auth provider
 - [ ] Rate limiter
 
 #### Other
 - [ ] Swagger / API doc generation
 - [ ] Generate random mock data
+
+#### Assets
+- [ ] Upload to a virtual FS
+
     
 
 ## Concepts
