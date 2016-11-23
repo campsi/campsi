@@ -6,7 +6,7 @@ const builder = require('../modules/queryBuilder');
 
 module.exports.getResources = (req, res) => {
     let resources = [];
-    forIn(req.schema.resources, (resource, id)=>{
+    forIn(req.schema.resources, (resource, id)=> {
         resources.push({
             id: id,
             label: resource.label
@@ -41,10 +41,23 @@ module.exports.getResource = (req, res) => {
     });
 };
 
-module.exports.createInvitationToken = (req, res) => {
-    req.db.collection('__invitation', (err, collection)=> {
-        collection.insert({role: req.params.role}, (err, invitation)=> {
-            helpers.json(res, invitation);
+module.exports.createInvitation = (req, res) => {
+    const now = new Date();
+    const exp = new Date(now.getTime() + 10 * 24 * 60);
+    const defaults = {
+        expiration: exp,
+        unique: true
+    };
+
+    if(!req.body.role || !req.schema.roles[req.body.role]){
+        return helpers.error(res, 'missing role');
+    }
+
+    const invitation = Object.assign({}, defaults, req.body);
+
+    req.db.collection('__invitations__', (err, collection)=> {
+        collection.insert(invitation, (err, result)=> {
+            helpers.json(res, result.ops[0]);
         });
     });
 };

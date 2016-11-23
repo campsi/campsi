@@ -1,16 +1,16 @@
 'use strict';
 
 module.exports.unauthorized = function unauthorized(res) {
-    return res.json(403, {message: 'unauthorized'}, {});
+    return res.status(403).json({message: 'unauthorized'});
 };
 
 module.exports.notFound = function notFound(res) {
-    res.json(404, {message: 'undefined resource'}, {});
+    res.status(404).json({message: 'undefined resource'});
 };
 
 module.exports.error = function error(res, err) {
     function sendError() {
-        res.json(400, err, {});
+        res.status(400).json(err);
         return true;
     }
 
@@ -27,9 +27,9 @@ module.exports.validationError = function validationError(res) {
 };
 
 module.exports.notImplemented = (res)=> {
-    res.json(500, "not implemented");
+    res.status(500).json('not implemented');
 };
 
 module.exports.json = function json(res, body) {
-    return res.json(200, body, {});
+    return res.json(body);
 };

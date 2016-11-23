@@ -68,61 +68,21 @@
 
 
 
-const restify = require('restify');
-const parseJSON = require('./app/modules/parseJSON');
 const config = require('config');
-const { MongoClient } = require('mongodb');
-const assert = require('assert');
-const bunyan = require('bunyan');
 const path = require('path');
-const passport = require('passport');
 const commandLineArgs = require('command-line-args');
 
-const args = commandLineArgs( [
+const args = commandLineArgs([
     {name: 'verbose', alias: 'v', type: Boolean},
     {name: 'schema', type: String, defaultOption: true},
     {name: 'port', alias: 'P', type: Number}
 ]);
 const schemaFile = args.schema || config.schema;
-const server = restify.createServer({});
-//noinspection JSCheckFunctionSignatures
-const logger = bunyan.createLogger({name: 'campsi api', hostname: 'CLI'});
+const schema = require(path.resolve(__dirname, schemaFile));
 
-server.use([
-    restify.requestLogger({log: logger}),
-    restify.authorizationParser(),
-    restify.fullResponse(),
-    restify.CORS(),
-    restify.queryParser({mapParams: false, allowDots: false}),
-    restify.jsonBodyParser({mapParams: false}),
-    restify.pre.sanitizePath()
-]);
-
-server.on('uncaughtException', function (req, res, route, err) {
-    console.error(route);
-    console.error(err.message);
-    console.error(err.stack);
-    logger.error(err);
-    res.send(500);
-    process.exit(1);
-});
-
-logger.info('application init');
-
-parseJSON(path.resolve(__dirname, schemaFile)).then((schema)=> {
-    const mongoURI = `${config.mongoURI}/${schema.name}`;
-    const port = args.port || config.port;
-
-    MongoClient.connect(mongoURI, (err, db)=> {
-        assert.equal(null, err);
-        logger.info('mongodb connection OK', {uri: mongoURI});
-        require('./app/routes')(schema, server, db).then(()=> {
-            server.listen(port);
-            logger.info('server listening on port', port);
-        });
+const app = require('./app/server');
+app.init(schema, config)
+    .then(()=>{
+        app.listen(args.port || config.port);
+        console.info('listening to', args.port || config.port);
     });
-}, (err)=> {
-    err.schemaFile = schemaFile;
-    logger.error(err);
-    process.exit(1);
-});

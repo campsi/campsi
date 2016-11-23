@@ -1,7 +1,19 @@
+/*
+todo shall we really enforce data ?
+ +it does cleaner url
+ +it is not a param name but a value
+ -inconsistent w/ filtering
+*/
 function getFieldPath(req, field) {
     return ['states', req.state || req.resource.defaultState, 'data', field].join('.');
 }
 
+/**
+ * flips sorting order if field begins with minus '-'
+ * @param {Object} req
+ * @param {String} field
+ * @returns {Array<Array>}
+ */
 function getMongoSortArray(req, field) {
     return (field.indexOf('-') !== 0)
         ? [getFieldPath(req, field), 1]

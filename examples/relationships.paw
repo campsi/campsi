@@ -5,7 +5,7 @@
     <databaseInfo>
         <version>134481920</version>
         <UUID>ABDB0A85-4777-4380-B208-D93427AA1FC2</UUID>
-        <nextObjectID>152</nextObjectID>
+        <nextObjectID>164</nextObjectID>
         <metadata>
             <plist version="1.0">
                 <dict>
@@ -61,9 +61,9 @@
         </metadata>
     </databaseInfo>
     <object type="LMKEYVALUE" id="z105">
-        <attribute name="value" type="string"></attribute>
+        <attribute name="value" type="string">Bearer 8beef34d-42bb-42bc-a4c8-973c2bb07f0f</attribute>
         <attribute name="order" type="int64">0</attribute>
-        <attribute name="name" type="string"></attribute>
+        <attribute name="name" type="string">Authorization</attribute>
         <attribute name="enabled" type="bool">1</attribute>
         <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
         <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
@@ -129,18 +129,18 @@
     </object>
     <object type="LMREQUEST" id="z121">
         <attribute name="uuid" type="string">BD74F78A-CEC6-42D1-BDE6-DE4EB3584F46</attribute>
-        <attribute name="url" type="string">localhost:3000/admin/resources/categories</attribute>
+        <attribute name="url" type="string">localhost:3000/resources/categories</attribute>
         <attribute name="storecookies" type="bool">1</attribute>
         <attribute name="sendcookies" type="bool">1</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">GET</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">6</attribute>
+        <attribute name="order" type="int64">9</attribute>
         <attribute name="name" type="string">Schema</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z105"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z105 z153"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z123">
         <attribute name="value" type="string"></attribute>
@@ -161,7 +161,7 @@
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">GET</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">7</attribute>
+        <attribute name="order" type="int64">10</attribute>
         <attribute name="name" type="string">Categories</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
@@ -180,7 +180,7 @@
         <relationship name="variablesvalues" type="0/0" destination="LMENVIRONMENTVARIABLEVALUE" idrefs="z128"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z130">
-        <attribute name="value" type="string">[{"data":{"charset":"utf-8","username":["admin@campsi.io"],"password":[{"data":{"value":"0301B62D995ED8863C7F51650818674192BEB01F5BA2FD62C905A0015CD97AA37C9F004A5C930EBF13E093CDF73B29480FC6608275EE4B68BAE67F7AC8F69946E22682FACF1EA7A93D6325493E77B988E4CF","keyUUID":"EF2E4968-5F7C-4F7D-948E-43762942EE31","mode":0},"identifier":"com.luckymarmot.SecureDynamicValue"}]},"identifier":"com.luckymarmot.BasicAuthDynamicValue"}]</attribute>
+        <attribute name="value" type="string">Bearer 23ff96b1-07e0-4547-a228-97aa76a27b14</attribute>
         <attribute name="order" type="int64">2</attribute>
         <attribute name="name" type="string">Authorization</attribute>
         <attribute name="enabled" type="bool">1</attribute>
@@ -224,18 +224,18 @@
     </object>
     <object type="LMREQUEST" id="z140">
         <attribute name="uuid" type="string">F6AD584C-9C64-4211-BF3A-C74D6505085F</attribute>
-        <attribute name="url" type="string">http://localhost:3000/admin/users</attribute>
+        <attribute name="url" type="string">http://localhost:3000/users</attribute>
         <attribute name="storecookies" type="bool">1</attribute>
         <attribute name="sendcookies" type="bool">1</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">GET</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">5</attribute>
+        <attribute name="order" type="int64">8</attribute>
         <attribute name="name" type="string">Resources</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z112 z130"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z130 z112"></relationship>
     </object>
     <object type="LMREQUEST" id="z141">
         <attribute name="uuid" type="string">F058EE98-9DB5-4C80-95ED-81E291145DD0</attribute>
@@ -247,7 +247,7 @@
         <attribute name="method" type="string">POST</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
         <attribute name="body" type="string">[{"data":{"json":"{\\"title\\":\\"The Cubs won the cup\\",\\"rels\\":{\\"oneToOneRelationship\\":\\"58205e4fa5dc6c3b381a0e9b\\"}}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
-        <attribute name="order" type="int64">3</attribute>
+        <attribute name="order" type="int64">6</attribute>
         <attribute name="name" type="string">Create an article</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
@@ -282,7 +282,7 @@
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">GET</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">9</attribute>
+        <attribute name="order" type="int64">12</attribute>
         <attribute name="name" type="string">Articles</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
@@ -290,18 +290,18 @@
     </object>
     <object type="LMREQUEST" id="z145">
         <attribute name="uuid" type="string">5B566F54-8950-49D9-A29D-BA64530CB71C</attribute>
-        <attribute name="url" type="string">http://localhost:3000/admin/resources</attribute>
+        <attribute name="url" type="string">http://localhost:3000/resources</attribute>
         <attribute name="storecookies" type="bool">1</attribute>
         <attribute name="sendcookies" type="bool">1</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">GET</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">4</attribute>
+        <attribute name="order" type="int64">7</attribute>
         <attribute name="name" type="string">My API (4)</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
-        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z146 z147"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z147 z146"></relationship>
     </object>
     <object type="LMKEYVALUE" id="z146">
         <attribute name="value" type="string">[{"data":{"charset":"utf-8","username":["admin@campsi.io"],"password":[{"data":{"value":"0301C28E422E863630B42DE12107D8ADD307D49CBF18E15B3E59130747905F7C1B2A6609BCD338A1387B4A6A6CB7FDF37FBC88A585AF8EB34C2D3897F5B474D1840CB30AFB01F93E46D0E145538A8BDA1BE3","keyUUID":"EF2E4968-5F7C-4F7D-948E-43762942EE31","mode":0},"identifier":"com.luckymarmot.SecureDynamicValue"}]},"identifier":"com.luckymarmot.BasicAuthDynamicValue"}]</attribute>
@@ -325,14 +325,14 @@
     </object>
     <object type="LMREQUEST" id="z148">
         <attribute name="uuid" type="string">CBE7E264-BE00-41F4-B629-2D109DC1ACC6</attribute>
-        <attribute name="url" type="string">http://localhost:3000/docs/categories?sort=label</attribute>
+        <attribute name="url" type="string">http://localhost:3000/docs/categories/58206962da157d3cc0220395/published</attribute>
         <attribute name="storecookies" type="bool">1</attribute>
         <attribute name="sendcookies" type="bool">1</attribute>
         <attribute name="redirectmethod" type="bool">0</attribute>
         <attribute name="redirectauthorization" type="bool">0</attribute>
         <attribute name="method" type="string">GET</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
-        <attribute name="order" type="int64">8</attribute>
+        <attribute name="order" type="int64">11</attribute>
         <attribute name="name" type="string">Categories Sort</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
@@ -378,10 +378,153 @@
         <attribute name="method" type="string">PUT</attribute>
         <attribute name="followredirects" type="bool">0</attribute>
         <attribute name="body" type="string">[{"data":{"json":"{\\"label\\":\\"Musical\\"}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
-        <attribute name="order" type="int64">2</attribute>
+        <attribute name="order" type="int64">5</attribute>
         <attribute name="name" type="string">Create a categorie Duplicate</attribute>
         <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
         <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z150 z151"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z153">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z121"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z154">
+        <attribute name="uuid" type="string">22EA63F1-23AD-4680-B5FB-80BFD460C451</attribute>
+        <attribute name="url" type="string">localhost:3000/invitation</attribute>
+        <attribute name="storecookies" type="bool">1</attribute>
+        <attribute name="sendcookies" type="bool">1</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">[{"data":{"json":"{\\"role\\":\\"admin\\"}"},"identifier":"com.luckymarmot.JSONDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">4</attribute>
+        <attribute name="name" type="string">Create an invitation</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z156 z155"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z155">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z154"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z156">
+        <attribute name="value" type="string">Bearer b01711fd-dcd8-4110-8235-0399a61e9f57</attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string">Authorization</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z154"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z157">
+        <attribute name="uuid" type="string">1A4A7E21-B69A-4FFD-84DA-B200973CC0AD</attribute>
+        <attribute name="url" type="string">http://localhost:3000/auth/providers</attribute>
+        <attribute name="storecookies" type="bool">1</attribute>
+        <attribute name="sendcookies" type="bool">1</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">GET</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="order" type="int64">13</attribute>
+        <attribute name="name" type="string">Articles Duplicate</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z158"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z158">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">0</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z157"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z159">
+        <attribute name="value" type="string">http://localhost:3000/auth/local</attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string">Referer</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z160"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z160">
+        <attribute name="uuid" type="string">2EB4527E-3345-40D9-879E-FCAFB5D4BFC6</attribute>
+        <attribute name="url" type="string">localhost:3000/auth/local</attribute>
+        <attribute name="storecookies" type="bool">1</attribute>
+        <attribute name="sendcookies" type="bool">1</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">[{"data":{"keyValues":[[["action"],["signin"],true],[["username"],["romainbessuges@gmail.com"],true],[["password"],["nzgafyqn"],true]]},"identifier":"com.luckymarmot.BodyFormKeyValueDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string">Login OK</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z161 z159"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z161">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z160"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z162">
+        <attribute name="value" type="string"></attribute>
+        <attribute name="order" type="int64">2</attribute>
+        <attribute name="name" type="string"></attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z163"></relationship>
+    </object>
+    <object type="LMREQUEST" id="z163">
+        <attribute name="uuid" type="string">542A651B-EA50-4716-AEFA-10A1AD053080</attribute>
+        <attribute name="url" type="string">localhost:3000/auth/local</attribute>
+        <attribute name="storecookies" type="bool">1</attribute>
+        <attribute name="sendcookies" type="bool">1</attribute>
+        <attribute name="redirectmethod" type="bool">0</attribute>
+        <attribute name="redirectauthorization" type="bool">0</attribute>
+        <attribute name="method" type="string">POST</attribute>
+        <attribute name="followredirects" type="bool">0</attribute>
+        <attribute name="body" type="string">[{"data":{"keyValues":[[["action"],["signin"],true],[["username"],["romainbessuges@gmail.com"],true],[["password"],["nzgafyq"],true]]},"identifier":"com.luckymarmot.BodyFormKeyValueDynamicValue"}]</attribute>
+        <attribute name="order" type="int64">3</attribute>
+        <attribute name="name" type="string">Login KO</attribute>
+        <relationship name="parent" type="0/1" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="children" type="0/0" destination="LMREQUESTTREEITEM"></relationship>
+        <relationship name="headers" type="0/0" destination="LMKEYVALUE" idrefs="z162 z164"></relationship>
+    </object>
+    <object type="LMKEYVALUE" id="z164">
+        <attribute name="value" type="string">http://localhost:3000/auth/local</attribute>
+        <attribute name="order" type="int64">1</attribute>
+        <attribute name="name" type="string">Referer</attribute>
+        <attribute name="enabled" type="bool">1</attribute>
+        <relationship name="groupforbodyparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforheaders" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="groupforurlparameters" type="0/1" destination="LMREQUESTGROUP"></relationship>
+        <relationship name="request" type="0/1" destination="LMREQUEST" idrefs="z163"></relationship>
     </object>
 </database>

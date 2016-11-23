@@ -1,6 +1,8 @@
 'use strict';
 
 const helpers = require('../modules/responseHelpers');
+const passport = require('passport');
+const BearerStrategy = require('passport-http-bearer').Strategy;
 
 /**
  *
@@ -11,27 +13,70 @@ const helpers = require('../modules/responseHelpers');
  * @returns {Boolean}
  */
 function can(user, method, resource, state) {
-    if(typeof resource === 'undefined'){
+
+    if (typeof resource === 'undefined') {
         return true;
     }
 
-    let role = (typeof user === 'undefined') ? 'public' : user.role;
-    let permission = resource.permissions[role][state];
-    return (permission && (permission.indexOf(method) > -1 || permission === '*'));
+    let roles = (typeof user === 'undefined') ? 'public' : user.role;
+
+    if (!Array.isArray(roles)) {
+        roles = [roles];
+    }
+
+    let success = false;
+
+    roles.forEach((role)=> {
+        let permission = resource.permissions[role][state];
+        if (permission && (permission.indexOf(method) > -1 || permission === '*')) {
+            success = true;
+        }
+    });
 }
 
-module.exports = function authUser(config, db) {
-    return (req, res, next)=> {
-        if (req.authorization.basic) {
-            let email = req.authorization.basic.username;
-
-            if (typeof config.users[email] !== 'undefined') {
-                req.user = config.users[email];
-            }
+/**
+ * @todo Rename user.role => user.roles
+ * @todo refactor
+ * @param config
+ * @param user
+ */
+const isUserAdmin = (config, user)=> {
+    if (!Array.isArray(user.role)) {
+        user.role = [user.role];
+    }
+    console.dir(config.roles);
+    user.role.forEach((role)=> {
+        if (config.roles[role] && config.roles[role].admin) {
+            user.isAdmin = true;
         }
+    });
+};
 
-        can(req.user, req.method, req.resource, req.state)
-            ? next()
-            : helpers.unauthorized(res);
+module.exports = function authUser(config, db) {
+
+    const users = db.collection('__users__');
+
+    passport.use(new BearerStrategy(function (token, done) {
+        let query = {};
+        query['token.value'] = token;
+        query['token.expiration'] = {$gt: new Date()};
+
+        users.findOne(query, (err, user)=> {
+            if (err || !user) {
+                return done(err);
+            }
+
+            isUserAdmin(config, user);
+            return done(null, user, {scope: 'all'});
+        });
+    }));
+
+    return (req, res, next)=> {
+        const end = ()=> can(req.user, req.method, req.resource, req.state) ? next() : helpers.unauthorized(res);
+        if (req.headers.authorization) {
+            passport.authenticate('bearer', {session: false})(req, res, end);
+        } else {
+            end();
+        }
     }
 };

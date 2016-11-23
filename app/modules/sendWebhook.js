@@ -25,16 +25,18 @@ module.exports = function sendWebhook(req, data) {
             body: data
         }, (err, res, body) => {
             if (err || String(res.statusCode)[0] !== '2') {
-                return req.log.error({
+                console.error({
                     message: 'webhook error',
                     method: req.method,
                     state: req.state,
                     hook: hook,
                     err: err,
-                    statusCode: res.statusCode
+                    statusCode: res.status
                 });
+
+                return;
             }
-            req.log.info(body);
+            console.info(body);
         });
     })
 };

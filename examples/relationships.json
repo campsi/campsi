@@ -5,11 +5,16 @@
     "roles": {
         "admin": {
             "label": "Administrateur",
-            "auth": true
+            "auth": true,
+            "admin": true
         },
         "public": {
             "label": "Public",
             "auth": false
+        },
+        "publisher": {
+            "label": "Publisher",
+            "auth": true
         }
     },
     "types": {
