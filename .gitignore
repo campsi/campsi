@@ -39,3 +39,6 @@ jspm_packages
 .idea
 
 config/private.js
+
+data/*
+!data/.gitkeep

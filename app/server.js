@@ -1,123 +1,123 @@
 'use strict';
 
 
+const {EventEmitter} = require('events');
 const express = require('express');
 const session = require('express-session');
-const app = express();
-const cors = require('cors');
-const passport = require('passport');
-const SessionStore = require('connect-mongodb-session')(session);
-
-const bodyParser = require('body-parser');
-const { MongoClient} = require('mongodb');
+const async = require('async');
 
 // middlewares
-const decorateRequest = require('./middlewares/decorateRequest');
-const parseParams = require('./middlewares/parseParams');
+const cors = require('cors');
 const authUser = require('./middlewares/authUser');
-const adminOnly = require('./middlewares/adminOnly');
+const bodyParser = require('body-parser');
 
-// app modules
-const parseSchema = require('./modules/parseSchema');
-
-// route handlers
-const docs = require('./handlers/docs');
-const admin = require('./handlers/admin');
-const search = require('./handlers/search');
-
-let auth;
+const SessionStore = require('connect-mongodb-session')(session);
+const { MongoClient} = require('mongodb');
+const Campsi = require('campsi-core');
+require('campsi-base-components');
 
 
-/**
- * @param server
- * @param {Schema} schema
- * @param db
- */
-const setMiddlewares = (server, schema, db) => {
-
-    server.use(cors());
-    server.use(session({
-        secret: 'keyboard cat', // config
-        resave: false,
-        saveUninitialized: false,
-        store: new SessionStore({
-            uri: db.URI,
-            collection: '__sessions__'
-        })
-    }));
-    server.use(bodyParser.json());
-    server.use(bodyParser.urlencoded({extended: false}));
-    server.use(decorateRequest(schema, db));
-    server.use(authUser(schema, db));
-    server.param('resource', parseParams(schema, db));
-
-    /// maybe move to auth
-    //app.use(passport.initialize());
-    //app.use(passport.session());
-
+const handlers = {
+    docs: require('./handlers/docs'),
+    admin: require('./handlers/admin'),
+    search: require('./handlers/search'),
+    assets: require('./handlers/assets'),
+    auth: require('./handlers/auth')
 };
 
-/**
- * @param server
- */
-const setRoutes = (server) => {
-    //// ADMIN
-    server.get('/resources', adminOnly, admin.getResources);
-    server.get('/resources/:resource', adminOnly, admin.getResource);
-    server.get('/users', adminOnly, admin.listUsers);
-    server.post('/users', adminOnly, admin.createUser);
-    server.post('/invitation', adminOnly, admin.createInvitation);
+class CampsiServer extends EventEmitter {
+    /**
+     *
+     * @param {Schema} schema
+     * @param {CampsiServerConfig} config
+     */
+    constructor(schema, config) {
+        super();
+        this.app = express();
+        this.schema = schema;
+        this.config = config;
+        this.mongoURI = `${config.mongoURI}/${schema.name}`;
+        this.dbConnect()
+            .then(() => this.setupApp())
+            .then(() => this.parseSchema())
+            .then(() => this.loadPlugins())
+            .then(()=> this.emit('ready'))
+            .catch((err)=>{
+                console.error(err);
+            })
+    }
 
-    //// AUTH
-    server.get('/auth/providers', auth.getProviders);
-    server.get('/auth/local', auth.local);
-    server.post('/auth/local', auth.local);
-    server.get('/auth/:strategy', auth.initAuth);
-    server.get('/auth/:strategy/callback', auth.callback);
-
-    //// SEARCH
-    server.get('/search/:sid', search.getSearch);
-    server.post('/search/', search.postSearch);
-    server.post('/search/:sid', search.putSearch);
-    server.delete('/search/:sid', search.delSearch);
-
-
-    //// DOCS
-    // GET
-    server.get('/docs/:resource', docs.getDocs);
-    server.get('/docs/:resource/:id/:state', docs.getDoc);
-    server.get('/docs/:resource/:id', docs.getDoc);
-    // POST
-    server.post('/docs/:resource/:state', docs.postDoc);
-    server.post('/docs/:resource', docs.postDoc);
-    // PUT
-    server.put('/docs/:resource/:id/state', docs.putDocState);
-    server.put('/docs/:resource/:id/:state', docs.putDoc);
-    server.put('/docs/:resource/:id', docs.putDoc);
-    // DEL
-    server.delete('/docs/:resource/:id', docs.delDoc);
-};
-
-
-/**
- * Setup middlewares and routes
- *
- * @param schema
- * @param config
- * @returns {Promise}
- */
-function init(schema, config) {
-    return new Promise((resolve)=> {
-        const mongoURI = `${config.mongoURI}/${schema.name}`;
-        MongoClient.connect(mongoURI, (err, db)=> {
-            db.URI = mongoURI;
-            auth = require('./handlers/auth')(db, config.authProviders);
-            setMiddlewares(app, schema, db);
-            setRoutes(app);
-            return parseSchema(schema, db).then(resolve);
+    dbConnect() {
+        console.info('db connect');
+        return new Promise((resolve)=> {
+            MongoClient.connect(this.mongoURI, (err, db)=> {
+                console.info(' -> OK');
+                db.URI = this.mongoURI;
+                this.db = db;
+                resolve();
+            });
         });
-    });
+    }
+
+    setupApp() {
+        console.info('setup app');
+        console.info(' -> CORS');
+        this.app.use(cors());
+        console.info(' -> bodyparser');
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({extended: false}));
+        console.info(' -> auth');
+        this.app.use(session({
+            secret: 'keyboard cat', // config
+            resave: false,
+            saveUninitialized: false,
+            store: new SessionStore({
+                uri: this.db.URI,
+                collection: '__sessions__'
+            })
+        }));
+        this.app.use(authUser(this));
+        this.app.use((req, res, next)=> {
+            req.db = this.db;
+            req.schema = this.schema;
+            req.config = this.config;
+            next();
+        });
+    }
+
+    parseSchema() {
+        console.info('parse schema');
+        const self = this;
+        return new Promise((resolve)=> {
+            async.eachOf(self.schema.resources, function (resource, name, cb) {
+
+                Object.assign(resource, self.schema.types[resource.type]);
+                Campsi.create('form', {
+                    options: {fields: resource.fields},
+                    context: new Campsi.context()
+                }, function (component) {
+                    console.info(' -> resource', name);
+                    resource.model = component;
+                    resource.collection = self.db.collection(name);
+                    cb();
+                });
+            }, resolve);
+        })
+    }
+
+    loadPlugins() {
+        console.info('load plugins');
+        return new Promise((resolve)=> {
+            async.eachOf(this.config.handlers, (name,path, cb)=> {
+                console.info(' -> plugin', name, path);
+                const plugin = handlers[name];
+                plugin(this, (router)=> {
+                    this.app.use(path, router);
+                    cb();
+                });
+            }, resolve);
+        });
+    }
 }
 
-module.exports = app;
-module.exports.init = init;
+module.exports = CampsiServer;

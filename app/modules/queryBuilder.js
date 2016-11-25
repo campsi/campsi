@@ -140,8 +140,21 @@ module.exports.setState = function setDocState(options) {
                 let ops = {$rename: {}, $set: {}};
                 ops.$rename[join('states', options.from)] = join('states', options.to);
                 ops.$set.modifiedAt = new Date();
-                ops.$set.modifiedBy = options.user ? options.user.id : null
+                ops.$set.modifiedBy = options.user ? options.user.id : null;
                 return resolve(ops);
             });
     });
+};
+
+module.exports.filterUserByEmailOrProviderId = (provider, profile)=> {
+    let query = {$or: []};
+    let identityIdFilter = {};
+    identityIdFilter['identities.' + provider.name + '.id'] = profile.identity.id;
+    query.$or.push(identityIdFilter);
+
+    if (profile.email) {
+        query.$or.push({email: profile.email});
+    }
+
+    return query;
 };

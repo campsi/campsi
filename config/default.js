@@ -6,6 +6,16 @@ module.exports = {
     schema: path.join(__dirname, '..', 'examples', 'arezzo.json'),
     mongoURI: 'mongodb://localhost:27017',
     host: host,
+    handlers: {
+        '/admin': 'admin',
+        '/auth': 'auth',
+        '/assets': 'assets',
+        '/searches': 'search',
+        '/docs': 'docs'
+    },
+    multerOptions: {
+        dest: path.join(__dirname, '..', 'data')
+    },
     authProviders: {
         local: {
             Strategy: require('passport-local'),

@@ -2,9 +2,11 @@
 
 const forIn = require('for-in');
 const helpers = require('../modules/responseHelpers');
-const builder = require('../modules/queryBuilder');
+//const builder = require('../modules/queryBuilder');
+const router = require('express').Router();
+const adminOnly = require('../middlewares/adminOnly');
 
-module.exports.getResources = (req, res) => {
+const getResources = (req, res) => {
     let resources = [];
     forIn(req.schema.resources, (resource, id)=> {
         resources.push({
@@ -21,7 +23,7 @@ module.exports.getResources = (req, res) => {
  * @param {Resource} req.resource
  * @param res
  */
-module.exports.getResource = (req, res) => {
+const getResource = (req, res) => {
     const cursor = req.resource.collection.find({});
     let schema = {
         label: req.resource.label,
@@ -41,7 +43,7 @@ module.exports.getResource = (req, res) => {
     });
 };
 
-module.exports.createInvitation = (req, res) => {
+const createInvitation = (req, res) => {
     const now = new Date();
     const exp = new Date(now.getTime() + 10 * 24 * 60);
     const defaults = {
@@ -49,7 +51,7 @@ module.exports.createInvitation = (req, res) => {
         unique: true
     };
 
-    if(!req.body.role || !req.schema.roles[req.body.role]){
+    if (!req.body.role || !req.schema.roles[req.body.role]) {
         return helpers.error(res, 'missing role');
     }
 
@@ -62,5 +64,14 @@ module.exports.createInvitation = (req, res) => {
     });
 };
 
-module.exports.listUsers = (req, res)=> helpers.notImplemented(res);
-module.exports.createUser = (req, res)=> helpers.notImplemented(res);
+const listUsers = (req, res)=> helpers.notImplemented(res);
+const createUser = (req, res)=> helpers.notImplemented(res);
+
+module.exports = function (server, cb) {
+    router.get('/resources', adminOnly, getResources);
+    router.get('/resources/:resource', adminOnly, getResource);
+    router.get('/users', adminOnly, listUsers);
+    router.post('/users', adminOnly, createUser);
+    router.post('/invitation', adminOnly, createInvitation);
+    cb(router);
+};

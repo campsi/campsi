@@ -21,6 +21,8 @@
  * @property {Array<Object>} types
  * @property {Array<User>} users
  * @property {Object<string,Role>} roles
+ * @property {String} name
+ * @property {String} title
  */
 
 
@@ -65,9 +67,40 @@
  * @property {Array<String>} states
  * @property {Object<String, String>} headers
  */
+/**
+ * @name ExpressRequest
+ * @type {Object}
+ * @property {Object} headers
+ * @property {Object} query
+ * @property {Object} session
+ * @property {String} headers.referer
+ * @property {String} headers.authorization
+ */
 
+/**
+ *
+ * @name CampsiServerConfig
+ * @type {Object}
+ * @property {Number} port
+ * @property {String} schema Path of the schema file
+ * @property {String} mongoURI
+ * @property {String} host
+ * @property {Object<String,String>} handlers
+ * @property {Object} multerOptions
+ * @property {Object<String,AuthProviderConfig>} authProviders
+ */
 
+/**
+ * @name AuthProviderConfig
+ * @type {Object}
+ * @property {Strategy} Strategy
+ * @property {String} title
+ * @property {Number} order
+ * @property {Object} options
+ * @property {Function} callback
+ */
 
+const CampsiServer = require('./app/server');
 const config = require('config');
 const path = require('path');
 const commandLineArgs = require('command-line-args');
@@ -79,10 +112,8 @@ const args = commandLineArgs([
 ]);
 const schemaFile = args.schema || config.schema;
 const schema = require(path.resolve(__dirname, schemaFile));
+const server = new CampsiServer(schema, config);
 
-const app = require('./app/server');
-app.init(schema, config)
-    .then(()=>{
-        app.listen(args.port || config.port);
-        console.info('listening to', args.port || config.port);
-    });
+server.on('ready', ()=> {
+    server.app.listen(args.port || config.port);
+});

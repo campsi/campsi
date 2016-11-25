@@ -52,9 +52,14 @@ const isUserAdmin = (config, user)=> {
     });
 };
 
-module.exports = function authUser(config, db) {
+/**
+ *
+ * @param {CampsiServer} server
+ * @returns {Function}
+ */
+module.exports = function authUser(server) {
 
-    const users = db.collection('__users__');
+    const users = server.db.collection('__users__');
 
     passport.use(new BearerStrategy(function (token, done) {
         let query = {};
@@ -66,7 +71,7 @@ module.exports = function authUser(config, db) {
                 return done(err);
             }
 
-            isUserAdmin(config, user);
+            isUserAdmin(server.config, user);
             return done(null, user, {scope: 'all'});
         });
     }));
@@ -74,6 +79,7 @@ module.exports = function authUser(config, db) {
     return (req, res, next)=> {
         const end = ()=> can(req.user, req.method, req.resource, req.state) ? next() : helpers.unauthorized(res);
         if (req.headers.authorization) {
+            //noinspection JSUnresolvedFunction
             passport.authenticate('bearer', {session: false})(req, res, end);
         } else {
             end();

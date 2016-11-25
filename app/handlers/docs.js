@@ -6,9 +6,10 @@ const embedDocs = require('../modules/embedDocs');
 const paginateCursor = require('../modules/paginateCursor');
 const sortCursor = require('../modules/sortCursor');
 const sendWebhook = require('../modules/sendWebhook');
+const router = require('express').Router();
 
 const onUpdate = (req, res)=> (err, result) => {
-    if (err){
+    if (err) {
         return helpers.error(res, err);
     }
 
@@ -25,7 +26,7 @@ const onUpdate = (req, res)=> (err, result) => {
     sendWebhook(req, output);
 };
 
-module.exports.getDocs = function getDocs(req, res) {
+function getDocs(req, res) {
 
     const queryBuilderOptions = {
         resource: req.resource,
@@ -54,10 +55,10 @@ module.exports.getDocs = function getDocs(req, res) {
             });
         });
     });
-};
+}
 
 
-module.exports.postDoc = function postDoc(req, res) {
+function postDoc(req, res) {
     builder.create({
         user: req.user,
         body: req.body,
@@ -74,9 +75,9 @@ module.exports.postDoc = function postDoc(req, res) {
             sendWebhook(req, output);
         });
     }).catch(helpers.validationError(res));
-};
+}
 
-module.exports.putDocState = function putDocState(req, res) {
+function putDocState(req, res) {
 
     const doSetState = function () {
         builder.setState({
@@ -109,10 +110,10 @@ module.exports.putDocState = function putDocState(req, res) {
         req.doc = doc.states[req.body.from].data;
         doSetState();
     });
-};
+}
 
 // modify a doc
-module.exports.putDoc = function putDoc(req, res) {
+function putDoc(req, res) {
     builder.update({
         body: req.body,
         resource: req.resource,
@@ -123,10 +124,10 @@ module.exports.putDoc = function putDoc(req, res) {
     }).catch((err)=> {
         return helpers.error(res, err);
     });
-};
+}
 
 
-module.exports.getDoc = function getDoc(req, res) {
+function getDoc(req, res) {
     const fields = builder.select({
         resource: req.resource,
         user: req.user,
@@ -142,10 +143,59 @@ module.exports.getDoc = function getDoc(req, res) {
         embedDocs.one(req, doc.states[req.state].data)
             .then(()=> helpers.json(res, doc.states[req.state]));
     });
-};
+}
 
-module.exports.delDoc = function delDoc(req, res) {
+function delDoc(req, res) {
     req.resource.collection.findOneAndDelete(req.filter, (err) => {
         return helpers.error(res, err) || res.send(200);
     });
+}
+
+
+/**
+ * @param {CampsiServer} server
+ * @param {Function} cb
+ */
+module.exports = function (server, cb) {
+    router.param('resource', (req, res, next)=> {
+        if (req.params.resource) {
+            req.resource = server.schema.resources[req.params.resource];
+
+            if (!req.resource) {
+                return helpers.notFound(res);
+            }
+
+            if (req.params.id) {
+                try {
+                    req.filter = {_id: ObjectID(req.params.id)};
+                } catch (err) {
+                    return helpers.notFound(res);
+                }
+            }
+
+            if (req.params.state) {
+                if (typeof req.resource.states[req.params.state] === 'undefined') {
+                    return helpers.notFound(res);
+                }
+                req.state = req.params.state;
+            } else {
+                req.state = req.resource.defaultState;
+            }
+        }
+        if (req.params.role && typeof server.schema.roles[req.params.role] === 'undefined') {
+            return helpers.notFound(res);
+        }
+        next();
+    });
+    router.get('/:resource', getDocs);
+    router.get('/:resource/:id/:state', getDoc);
+    router.get('/:resource/:id', getDoc);
+    router.post('/:resource/:state', postDoc);
+    router.post('/:resource', postDoc);
+    router.put('/:resource/:id/state', putDocState);
+    router.put('/:resource/:id/:state', putDoc);
+    router.put('/:resource/:id', putDoc);
+    router.delete('/:resource/:id', delDoc);
+
+    cb(router);
 };
