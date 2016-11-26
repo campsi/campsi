@@ -128,7 +128,7 @@ const localCallback = function (req, username, password, done) {
 
 function local(req, res, next) {
     // hack the request to make it look like a legit passport req
-    req.authProvider = req.config.authProviders.local;
+    req.authProvider = req.config.handlers.auth.options.providers.local;
     serializeState(req);
     switch (req.body.action) {
         case 'register':
@@ -276,7 +276,7 @@ function initAuth(req, res, next) {
  */
 function getProviders(req, res){
     let ret = [];
-    forIn(req.config.authProviders, (provider, name)=> {
+    forIn(req.config.handlers.auth.options.providers, (provider, name)=> {
         ret.push({
             name: name,
             order: provider.order,
@@ -342,8 +342,8 @@ function proxyVerifyCallback(fn, args, done) {
 }
 
 
-module.exports = function (server, cb) {
-    forIn(server.config.authProviders, (provider, providerName)=> {
+module.exports = function (server, options, cb) {
+    forIn(options.providers, (provider, providerName)=> {
         provider.options.passReqToCallback = true;
         provider.options.scope = provider.scope;
         provider.name = providerName;
@@ -359,7 +359,7 @@ module.exports = function (server, cb) {
     });
 
     router.param('provider', function (req, res, next, id) {
-        req.authProvider = req.config.authProviders[id];
+        req.authProvider = options.providers[id];
         return (!req.authProvider) ? helpers.notFound(res) : next();
     });
 

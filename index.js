@@ -85,11 +85,24 @@
  * @property {String} schema Path of the schema file
  * @property {String} mongoURI
  * @property {String} host
- * @property {Object<String,String>} handlers
- * @property {Object} multerOptions
- * @property {Object<String,AuthProviderConfig>} authProviders
+ * @property {Object<String,Object>} handlers
+ * @property {CampsiServerConfig~AssetsOptions} handlers.assets.options
+ * @property {CampsiServerConfig~AuthOptions} handlers.auth.options
  */
 
+/**
+ *
+ * @name CampsiServerConfig~AssetsOptions
+ * @type {Object}
+ * @property {Object} multerOptions
+ * @property {Function} getAssetURL
+ *
+ */
+
+/**
+ * @name CampsiServerConfig~AuthOptions
+ * @property {Object<String,AuthProviderConfig>} providers
+ */
 /**
  * @name AuthProviderConfig
  * @type {Object}

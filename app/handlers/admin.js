@@ -67,7 +67,7 @@ const createInvitation = (req, res) => {
 const listUsers = (req, res)=> helpers.notImplemented(res);
 const createUser = (req, res)=> helpers.notImplemented(res);
 
-module.exports = function (server, cb) {
+module.exports = function (server, options, cb) {
     router.get('/resources', adminOnly, getResources);
     router.get('/resources/:resource', adminOnly, getResource);
     router.get('/users', adminOnly, listUsers);

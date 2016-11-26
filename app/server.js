@@ -25,6 +25,9 @@ const handlers = {
     auth: require('./handlers/auth')
 };
 
+/**
+ * @property {Db} db
+ */
 class CampsiServer extends EventEmitter {
     /**
      *
@@ -40,9 +43,9 @@ class CampsiServer extends EventEmitter {
         this.dbConnect()
             .then(() => this.setupApp())
             .then(() => this.parseSchema())
-            .then(() => this.loadPlugins())
+            .then(() => this.loadHandlers())
             .then(()=> this.emit('ready'))
-            .catch((err)=>{
+            .catch((err)=> {
                 console.error(err);
             })
     }
@@ -50,7 +53,7 @@ class CampsiServer extends EventEmitter {
     dbConnect() {
         console.info('db connect');
         return new Promise((resolve)=> {
-            MongoClient.connect(this.mongoURI, (err, db)=> {
+            MongoClient.connect(this.mongoURI).then((db)=> {
                 console.info(' -> OK');
                 db.URI = this.mongoURI;
                 this.db = db;
@@ -105,14 +108,18 @@ class CampsiServer extends EventEmitter {
         })
     }
 
-    loadPlugins() {
-        console.info('load plugins');
+    loadHandlers() {
+        console.info('load handlers');
         return new Promise((resolve)=> {
-            async.eachOf(this.config.handlers, (name,path, cb)=> {
-                console.info(' -> plugin', name, path);
+            async.eachOf(this.config.handlers, (handler, name, cb)=> {
+                console.info(' -> handler', name, typeof handlers[name]);
                 const plugin = handlers[name];
-                plugin(this, (router)=> {
-                    this.app.use(path, router);
+                if(typeof plugin !== 'function'){
+                    console.error('   -> not a function');
+                    return cb();
+                }
+                plugin(this, handler.options, (router)=> {
+                    this.app.use(handler.path, router);
                     cb();
                 });
             }, resolve);

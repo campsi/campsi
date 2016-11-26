@@ -154,9 +154,10 @@ function delDoc(req, res) {
 
 /**
  * @param {CampsiServer} server
+ * @param {Object} options
  * @param {Function} cb
  */
-module.exports = function (server, cb) {
+module.exports = function (server, options, cb) {
     router.param('resource', (req, res, next)=> {
         if (req.params.resource) {
             req.resource = server.schema.resources[req.params.resource];
