@@ -75,6 +75,7 @@
  * @property {Object} session
  * @property {String} headers.referer
  * @property {String} headers.authorization
+ * @property {AssetMetadata} asset
  */
 
 /**
@@ -94,9 +95,46 @@
  *
  * @name CampsiServerConfig~AssetsOptions
  * @type {Object}
- * @property {Object} multerOptions
- * @property {Function} getAssetURL
+ * @property {Object} storage
+ * @property {Function} storage.getStorage
+ * @property {CampsiServerConfig~AssetsOptions~getAssetURL} storage.getAssetURL
+ * @property {CampsiServerConfig~AssetsOptions~deleteAsset} storage.deleteAsset
  *
+ */
+
+/**
+ * @name CampsiServerConfig~AssetsOptions~getAssetURL
+ * @type {Function}
+ * @param {AssetMetadata} metadata
+ * @return {String}
+ */
+/**
+ * @name CampsiServerConfig~AssetsOptions~deleteAsset
+ * @type {Function}
+ * @param {AssetMetadata} metadata
+ * @return {Promise}
+ */
+
+/**
+ * @name AssetMetadata
+ * @type {Object}
+ * @property {ObjectID} _id
+ * @property {String} path
+ * @property {String} filename
+ * @property {String} originalname
+ * @property {String} encoding
+ * @property {String} mimetype
+ * @property {String} relativePath
+ * @property {String} absolutePath
+ * @property {String} url
+ * @property {Object|undefined} dimensions
+ * @property {Number} dimensions.height
+ * @property {Number} dimensions.width
+ * @property {String} dimensions.type
+ * @property {Number} size
+ * @property {Object|undefined} metadata
+ * @property {Object|undefined} metadata.image
+ * @property {Object|undefined} metadata.exif
  */
 
 /**

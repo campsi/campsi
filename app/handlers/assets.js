@@ -10,46 +10,62 @@ const path = require('path');
 const request = require('request');
 const http = require('http');
 
+const paginateCursor = require('../modules/paginateCursor');
+const sortCursor = require('../modules/sortCursor');
+
 /**
  *
  * @param {CampsiServer} server
  * @param {CampsiServerConfig~AssetsOptions} options
- * @param cb
+ * @param {Function} cb
  */
 module.exports = function (server, options, cb) {
 
-    const upload = require('multer')(options.multerOptions);
+    const upload = require('multer')({
+        storage: options.storage.getStorage()
+    });
     /**
      * @type {Collection}
      */
     const assets = server.db.collection('__assets__');
 
-    router.get('/upload_form', (req, res)=> {
+    function getAssets(req, res) {
+        const cursor = assets.find({});
+        let result = {};
+        cursor.count().then((count) => {
+            result.count = count;
+            let {skip, limit} = paginateCursor(cursor, req.query, {perPage: 5});
+            result.hasNext = result.count > skip + limit;
+            sortCursor(cursor, req);
+            return cursor.toArray();
+        }).then((docs) => {
+            result.assets = docs;
+            res.json(result)
+        }).catch((err)=> {
+            console.error(err);
+            res.json({});
+        })
+    }
+
+    function getUploadForm(req, res) {
         res.send('<html><body>' +
             '<form action="/assets" method="post" enctype="multipart/form-data">' +
             '<input type="file" multiple="multiple" name="file"><br>' +
             '<input type="submit" name="submit"><br>' +
             '</form>' +
             '</body></html>')
-    });
-
-    router.get('/', (req, res)=> {
-        assets.find({})
-            .toArray()
-            .then((result) => res.json(result))
-            .catch((err)=> {
-                console.error(err);
-                res.json({});
-            })
-    });
+    }
 
 
+    function getAssetMetadata(req, res) {
+        res.json(req.asset);
+    }
 
-    router.get('/local/*', (req, res)=> {
+    function sendLocalFile(req, res) {
         res.sendFile(path.join(options.dataPath, req.params[0]));
-    });
+    }
 
-    router.get('/:asset', (req, res)=> {
+    function streamAsset(req, res) {
 
         const url = options.getAssetURL(req.asset);
 
@@ -66,53 +82,47 @@ module.exports = function (server, options, cb) {
         });
 
         req.pipe(newReq);
-    });
+    }
 
-    router.put('/:asset', (req, res)=> {
+    /**
+     * @param {ExpressRequest} req
+     * @param res
+     */
+    function deleteAsset(req, res) {
+        options.deleteAsset(req.asset)
+            .then(() => assets.deleteOne({_id: req.asset._id}))
+            .then((result)=> res.json(result))
+            .catch((err)=> helpers.error(res, err))
+    }
 
-    });
-
-    router.delete('/:asset', (req, res)=> {
-
-    });
-
-    router.param('asset', (req, res, next, id)=> {
-        assets.findOne({_id: ObjectID(id)})
-            .catch((err)=> {
-                console.error(err);
-                helpers.notFound(res);
-            })
-            .then((asset)=> {
-                console.info(asset);
-                req.asset = asset;
-                next();
-            })
-    });
-
-    //noinspection JSUnresolvedFunction
-    router.post('/', upload.array('file'), (req, res)=> {
-
+    function postAssets(req, res) {
         async.each(req.files, (file, cb)=> {
-
             delete file.destination;
             delete file.fieldname;
 
             file.createdBy = req.user ? req.user.id : null;
             file.createdAt = new Date();
-            if (!file.url) {
+
+            if (!file.url && options.getAssetURL) {
                 file.url = options.getAssetURL(file);
             }
-            if (!file.mimetype.startsWith('image')) {
+
+            delete file.buffer;
+
+            if (!file.mimetype.startsWith('image') || !file.path) {
                 return cb();
             }
 
-            getImageSize(file.path, (err, dimensions)=> {
+            getImageSize(file.path || file.buffer, (err, dimensions)=> {
                 file.dimensions = dimensions;
-                exif.read(file.path).then((exifData)=> {
+                console.info('dimensions ok');
+                exif.read(file.path || file.buffer).then((exifData)=> {
                     file.metada = exifData;
+                    delete file.buffer;
                     cb();
                 }).catch((err)=> {
                     console.error(err.message);
+                    delete file.buffer;
                     cb();
                 })
             });
@@ -121,9 +131,29 @@ module.exports = function (server, options, cb) {
                 res.json(result.ops);
             });
         });
+    }
 
-    });
+    function paramAsset(req, res, next, id) {
+        assets.findOne({_id: ObjectID(id)})
+            .catch((err)=> {
+                console.error(err);
+                helpers.notFound(res);
+            })
+            .then((asset)=> {
+                req.asset = asset;
+                next();
+            })
+    }
 
+    //noinspection JSUnresolvedFunction
+    router.post('/', upload.array('file'), postAssets);
+    router.get('/', getAssets);
+    router.get('/local/*', sendLocalFile);
+    router.get('/upload_form', getUploadForm);
+    router.get('/:asset/metadata', getAssetMetadata);
+    router.get('/:asset', streamAsset);
+    router.delete('/:asset', deleteAsset);
+    router.param('asset', paramAsset);
     cb(router);
 
 };

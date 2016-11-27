@@ -8,13 +8,19 @@ const defaults = {
  * @param {Cursor} cursor
  * @param {object} query
  * @param {object} [options]
- *
- * @return {Cursor} cursor
+ * @return {{cursor: {Cursor}, skip: {Number}, limit: {Number}, page: {Number}}}
  */
-module.exports = (cursor, query, options)=> {
+module.exports = function paginateCursor(cursor, query, options) {
     const params = Object.assign({}, defaults, options, query);
-    cursor.skip((params.page - 1) * params.perPage).limit(params.perPage);
-    return cursor;
+    const skip = (parseInt(params.page) - 1) * parseInt(params.perPage);
+    const limit = parseInt(params.perPage);
+    cursor.skip(skip).limit(limit);
+    return {
+        cursor: cursor,
+        skip: skip,
+        limit: limit,
+        page: params.page
+    }
 };
 
 module.exports.defaults = defaults;

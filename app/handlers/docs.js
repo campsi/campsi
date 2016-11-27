@@ -41,19 +41,20 @@ function getDocs(req, res) {
     const cursor = req.resource.collection.find(query, fields);
 
     let result = {};
-    cursor.count((err, count)=> {
+    cursor.count().then((count) => {
         result.count = count;
         result.label = req.resource.label;
-
-        paginateCursor(cursor, req.query);
+        let {skip, limit } = paginateCursor(cursor, req.query, {perPage: 5});
+        result.hasNext = result.count > skip + limit;
+        result.hasPrev = skip > 0;
         sortCursor(cursor, req);
-
-        cursor.toArray((err, docs) => {
-            result.docs = docs.map((doc)=> Object.assign({id: doc._id}, doc.states[req.state]));
-            embedDocs.many(req, result.docs).then(()=> {
-                helpers.json(res, result)
-            });
-        });
+        return cursor.toArray();
+    }).then((docs) => {
+        result.docs = docs.map((doc)=> Object.assign({id: doc._id}, doc.states[req.state]));
+        return embedDocs.many(req, result.docs);
+    }).then(()=> res.json(result)).catch((err)=> {
+        console.error(err);
+        res.json({});
     });
 }
 

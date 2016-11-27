@@ -1,11 +1,14 @@
 /*
-todo shall we really enforce data ?
+ todo shall we really enforce data ?
  +it does cleaner url
  +it is not a param name but a value
  -inconsistent w/ filtering
-*/
+ */
 function getFieldPath(req, field) {
-    return ['states', req.state || req.resource.defaultState, 'data', field].join('.');
+    if (req.resource) {
+        return ['states', req.state || req.resource.defaultState, 'data', field].join('.');
+    }
+    return field;
 }
 
 /**
@@ -25,7 +28,6 @@ function getMongoSortArray(req, field) {
  * @link http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#advanced-queries
  * @param {Cursor} cursor
  * @param {Object} req
- *
  * @return {Cursor} cursor
  */
 module.exports = (cursor, req)=> {
