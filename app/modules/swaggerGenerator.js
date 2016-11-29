@@ -19,12 +19,12 @@ function generateSwagger(schema) {
             root.paths['/' + name] = {
                 get: {
                     description: 'List all ' + name,
-                    "produces": [
-                        "application/json"
+                    'produces': [
+                        'application/json'
                     ],
-                    "responses": {
-                        "200": {
-                            "description": "A list of pets."
+                    'responses': {
+                        '200': {
+                            'description': 'A list of pets.'
                         }
                     }
                 }

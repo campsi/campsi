@@ -2,17 +2,16 @@
 
 const router = require('express').Router();
 const async = require('async');
-const exif = require('fast-exif');
-const getImageSize = require('image-size');
 const {ObjectID} = require('mongodb');
 const helpers = require('../modules/responseHelpers.js');
 const path = require('path');
-const request = require('request');
 const http = require('http');
+const stream = require('stream');
+// const gm = require('gm');
 
 const paginateCursor = require('../modules/paginateCursor');
 const sortCursor = require('../modules/sortCursor');
-
+const util = require('util');
 /**
  *
  * @param {CampsiServer} server
@@ -21,9 +20,7 @@ const sortCursor = require('../modules/sortCursor');
  */
 module.exports = function (server, options, cb) {
 
-    const upload = require('multer')({
-        storage: options.storage.getStorage()
-    });
+    const upload = require('multer')();
     /**
      * @type {Collection}
      */
@@ -41,7 +38,7 @@ module.exports = function (server, options, cb) {
         }).then((docs) => {
             result.assets = docs;
             res.json(result)
-        }).catch((err)=> {
+        }).catch((err) => {
             console.error(err);
             res.json({});
         })
@@ -62,7 +59,7 @@ module.exports = function (server, options, cb) {
     }
 
     function sendLocalFile(req, res) {
-        res.sendFile(path.join(options.dataPath, req.params[0]));
+        res.sendFile(path.join(options.storage.dataPath, req.params[0]));
     }
 
     function streamAsset(req, res) {
@@ -70,7 +67,7 @@ module.exports = function (server, options, cb) {
         const url = options.getAssetURL(req.asset);
 
         const newReq = http.request(url, function (newRes) {
-            var headers = newRes.headers;
+            let headers = newRes.headers;
             headers['Content-Type'] = req.asset.mimetype;
             headers['Content-Length'] = req.asset.size;
             res.writeHead(newRes.statusCode, headers);
@@ -91,43 +88,44 @@ module.exports = function (server, options, cb) {
     function deleteAsset(req, res) {
         options.deleteAsset(req.asset)
             .then(() => assets.deleteOne({_id: req.asset._id}))
-            .then((result)=> res.json(result))
-            .catch((err)=> helpers.error(res, err))
+            .then((result) => res.json(result))
+            .catch((err) => helpers.error(res, err))
     }
 
+
     function postAssets(req, res) {
-        async.each(req.files, (file, cb)=> {
-            delete file.destination;
-            delete file.fieldname;
+        async.each(req.files, (file, cb) => {
 
-            file.createdBy = req.user ? req.user.id : null;
+            function onError(err){
+                console.error(err);
+                file.error = true;
+                cb();
+            }
+
+            function onSuccess(){
+                file.stream.destroy();
+                delete file.stream;
+                delete file.fieldname;
+                cb();
+            }
+
+            if (req.user) {
+                file.createdBy = req.user.id;
+            }
             file.createdAt = new Date();
+            file.createdFrom = {
+                origin: req.headers.origin,
+                referer: req.headers.referer,
+                ua: req.headers['user-agent']
+            };
 
-            if (!file.url && options.getAssetURL) {
-                file.url = options.getAssetURL(file);
-            }
-
-            delete file.buffer;
-
-            if (!file.mimetype.startsWith('image') || !file.path) {
-                return cb();
-            }
-
-            getImageSize(file.path || file.buffer, (err, dimensions)=> {
-                file.dimensions = dimensions;
-                console.info('dimensions ok');
-                exif.read(file.path || file.buffer).then((exifData)=> {
-                    file.metada = exifData;
-                    delete file.buffer;
-                    cb();
-                }).catch((err)=> {
-                    console.error(err.message);
-                    delete file.buffer;
-                    cb();
-                })
-            });
-        }, ()=> {
-            assets.insertMany(req.files).then((result)=> {
+            options.storage.store(file).then((storageStream) => {
+                file.stream.pipe(storageStream)
+                    .on('uploadSuccess', onSuccess)
+                    .on('uploadError', onError);
+            }).catch(onError);
+        }, () => {
+            assets.insertMany(req.files).then((result) => {
                 res.json(result.ops);
             });
         });
@@ -135,11 +133,11 @@ module.exports = function (server, options, cb) {
 
     function paramAsset(req, res, next, id) {
         assets.findOne({_id: ObjectID(id)})
-            .catch((err)=> {
+            .catch((err) => {
                 console.error(err);
                 helpers.notFound(res);
             })
-            .then((asset)=> {
+            .then((asset) => {
                 req.asset = asset;
                 next();
             })

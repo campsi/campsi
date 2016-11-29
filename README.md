@@ -2,7 +2,7 @@
 
 Manage and expose **document-oriented** content through a configurable RESTful **API**. 
 
-- Create  schemas with [_campsi_/**designer**](https://github.com/campsi/designer).
+- Create schemas with [_campsi_/**architect**](https://github.com/campsi/architect).
 - Talk to the API with [_campsi_/**admin**](https://github.com/campsi/admin).
 
 ## Features
@@ -33,9 +33,16 @@ Manage and expose **document-oriented** content through a configurable RESTful *
 - [ ] Swagger / API doc generation
 - [ ] Generate random mock data
 
-#### Assets
-- [ ] Upload to a virtual FS
-
+#### Assets Management
+- [X] Stream based upload system
+- [X] Filtered and paginated GET route
+- [X] Custom storage adapters
+  - [X] [Local storage with rotating subfolders](app/modules/assets/localAssetStorage.js)
+  - [X] [Amazon S3](app/modules/assets/s3AssetStorage.js)
+  - [ ] Azure Blob Storage
+  - [ ] Google Cloud Platform
+- [ ] GraphicsMagick Metadata recognition
+- [ ] Resize and convert media derivatives
     
 
 ## Concepts
@@ -45,7 +52,7 @@ Manage and expose **document-oriented** content through a configurable RESTful *
 States represent the different stages in a document lifecycle, like `published`, `draft` and `archived`. To each state is associated specific role-based permissions, defining allowed HTTP methods : 
 
 | Method   | Possible actions on the state                                                |
-|:--------:|:---------------------------------------------------------------------------- |
+|:---------|:---------------------------------------------------------------------------- |
 | `GET`    | view and query the documents                                                 |
 | `POST`   | create a new document                                                        |
 | `PUT`    | edit an existing document or put a document in this state                    |
@@ -65,11 +72,28 @@ States represent the different stages in a document lifecycle, like `published`,
 
 **You can create any number of states**: 
 
-`published`, `draft`, `waiting_for_approval`, `approved`, `rejected`, `submitted`, `read`, `replied`, …
+- `published`
+- `draft`
+- `waiting_for_approval`
+- `approved`
+- `rejected` 
+- `populationA`
+- `populationB`
+- `submitted`
+- `read`
+- `replied`
+- …
 
 **You can create any number of roles**: 
 
-`admin`, `editor`, `manager`, `customer`, `user`, `public`, `visitor`, …
+- `admin` 
+- `editor` 
+- `manager` 
+- `customer` 
+- `user`
+- `public` 
+- `visitor` 
+- …
 
 
 ### Resource
@@ -82,7 +106,7 @@ A document is an instance of a resource. It has an `id` and a value for each def
 
 #### Anatomy of a document
 ```javascript
-{
+let doc = {
 	id: ObjectID("58205e4fa5dc6c3b381a0e9b"),
     states: {
     	published: {
@@ -213,3 +237,6 @@ npm start
 
 - NodeJS v6.0.0
 - MongoDB v2.6.0
+- Optional
+  - ImageMagick
+  - Graphics Magick

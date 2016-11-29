@@ -1,9 +1,6 @@
 {
     "name": "arezzo",
     "title": "Arezzo",
-    "auth": {
-
-    },
     "roles": {
         "admin": {
             "label": "Administrateur",

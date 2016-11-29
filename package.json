@@ -19,7 +19,6 @@
   "homepage": "https://github.com/campsi/api#readme",
   "dependencies": {
     "async": "^2.1.2",
-    "aws-sdk": "^2.7.7",
     "body-parser": "^1.15.2",
     "campsi-base-components": "^1.0.1",
     "campsi-core": "^0.1.5",
@@ -34,19 +33,24 @@
     "express-session": "^1.14.2",
     "fast-exif": "^0.2.0",
     "for-in": "^0.1.6",
+    "gm": "^1.23.0",
     "image-size": "^0.5.0",
+    "image-size-stream": "^1.1.0",
     "mkdirp": "^0.5.1",
     "mongodb": "^2.2.11",
-    "multer": "^1.2.0",
-    "multer-s3": "^2.5.0",
+    "multer": "next",
     "passport": "^0.3.2",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "request": "^2.79.0",
+    "uuid": "^3.0.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.7.7",
     "passport-facebook": "^2.1.1",
     "passport-github2": "^0.1.10",
     "passport-google-oauth20": "^1.0.0",
-    "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "request": "^2.79.0",
-    "uuid": "^3.0.0"
+    "pretty-error": "^2.0.2"
   }
 }

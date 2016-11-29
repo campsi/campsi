@@ -19,7 +19,7 @@ module.exports.error = function error(res, err) {
 
 module.exports.validationError = function validationError(res) {
     return function (errors) {
-        error(res, {
+        module.exports.error(res, {
             message: 'Validation Error',
             fields: errors
         });

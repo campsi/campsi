@@ -99,11 +99,11 @@ const genInsert = (provider, profile, update)=> {
 };
 
 function resetPassword(req, res) {
-
+    return helpers.notImplemented(res);
 }
 
-function logout(req, res, next) {
-
+function logout(req, res) {
+    return helpers.notImplemented(res);
 }
 
 function testPassword(provider, user, password) {
@@ -221,8 +221,9 @@ const authCallback = (req, res)=> {
     });
 };
 
-const redirectWithError = (req, res)=> {
-    console.info('redirectWithError', new Error().stack);
+const redirectWithError = (req, res, err)=> {
+    err = err || new Error();
+    console.info('redirectWithError', err.stack);
     const state = getState(req);
     res.redirect(editURL(state.redirectURI, (obj)=> obj.query.error = true));
 };
@@ -243,8 +244,8 @@ const register = (req, res)=> {
     };
 
     req.db.collection('__users__').insertOne(user)
-        .then((result)=> authCallback(req, res))
-        .catch((err)=> redirectWithError(req, res));
+        .then(()=> authCallback(req, res))
+        .catch((err)=> redirectWithError(req, res, err));
 };
 
 
@@ -274,12 +275,12 @@ function initAuth(req, res, next) {
  * @param req
  * @param res
  */
-function getProviders(req, res){
+function getProviders(req, res) {
     let ret = [];
     forIn(req.config.handlers.auth.options.providers, (provider, name)=> {
         ret.push({
             name: name,
-            order: provider.order,
+            order: provider.order || 1,
             title: provider.title,
             buttonStyle: provider.buttonStyle,
             scope: provider.scope

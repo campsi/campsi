@@ -32,7 +32,7 @@ class CampsiServer extends EventEmitter {
     /**
      *
      * @param {Schema} schema
-     * @param {CampsiServerConfig} config
+     * @param {Config|CampsiServerConfig} config
      */
     constructor(schema, config) {
         super();

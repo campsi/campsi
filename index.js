@@ -148,6 +148,8 @@
  * @property {String} title
  * @property {Number} order
  * @property {Object} options
+ * @property {Object} colors
+ * @property {Array} scope
  * @property {Function} callback
  */
 
@@ -168,3 +170,5 @@ const server = new CampsiServer(schema, config);
 server.on('ready', ()=> {
     server.app.listen(args.port || config.port);
 });
+
+

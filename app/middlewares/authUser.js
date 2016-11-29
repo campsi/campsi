@@ -32,6 +32,8 @@ function can(user, method, resource, state) {
             success = true;
         }
     });
+
+    return success;
 }
 
 /**
