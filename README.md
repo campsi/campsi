@@ -12,6 +12,7 @@ Manage and expose **document-oriented** content through a configurable RESTful *
 - [x] Describe **complex data structures**, using _campsi_ components
 - [x] State-based document **lifecycle** for approval workflows
 - [x] `POST`, `PUT` and `DELETE` asynchronous **webhooks** for distributed architecture
+- [x] Truly Stateless
 - [ ] Patch updates
 - [ ] Conflicts resolver
 
@@ -25,8 +26,13 @@ Manage and expose **document-oriented** content through a configurable RESTful *
 #### Authentification & authorization
 - [x] Role-Based Access-Control
 - [x] Generate invitation tokens by role
-- [x] Passport integration
-- [x] Implement any auth provider
+- [x] PassportJS integration
+- [x] Custom authentification providers
+    - [x] [Local Database](app/modules/auth/local.js)
+    - [x] [Facebook](app/modules/auth/facebook.js)
+    - [x] [Twitter](app/modules/auth/twitter.js)
+    - [x] [Github](app/modules/auth/github.js)
+    - [x] [Google](app/modules/auth/google.js)
 - [ ] Rate limiter
 
 #### Other

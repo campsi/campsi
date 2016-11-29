@@ -30,6 +30,7 @@
     "crypto-js": "^3.1.8",
     "edit-url": "^1.0.1",
     "express": "^4.14.0",
+    "express-rate-limit": "^2.6.0",
     "express-session": "^1.14.2",
     "fast-exif": "^0.2.0",
     "for-in": "^0.1.6",
