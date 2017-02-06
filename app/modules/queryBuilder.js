@@ -28,7 +28,7 @@ function getStateFromOptions(options, propertyName) {
  * @returns {Promise}
  */
 function validate(model, doc, doValidate) {
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
         if (doValidate !== true) {
             return resolve();
         }
@@ -47,7 +47,7 @@ module.exports.find = function find(options) {
     let filter = {};
 
     if (options.query) {
-        forIn(options.query, (val, prop)=> {
+        forIn(options.query, (val, prop) => {
             if (prop.indexOf('data.') === 0) {
                 filter[join('states', state.name, prop)] = val;
             }
@@ -56,10 +56,42 @@ module.exports.find = function find(options) {
     return filter;
 };
 
+// todo move and extract to use in the controller
+function getStatesForUser(options) {
+    const states = Object.keys(options.resource.states);
+    const roles = (options.user && options.user.role) ? options.user.role : ['public'];
+    let allowed = [];
+
+    roles.forEach(function (role) {
+        let permission = options.resource.permissions[role];
+        states.forEach(function (state) {
+            if (permission && permission[state] && (
+                permission[state].indexOf(options.method)
+                || permission[state] === '*')
+            ) {
+                allowed.push(state);
+            }
+        });
+    });
+
+    return allowed;
+}
+
 module.exports.select = function select(options) {
-    let state = getStateFromOptions(options);
-    let fields = {};
-    fields[join('states', state.name)] = 1;
+    // let state = getStateFromOptions(options);
+    let fields = {
+        _id: 1,
+    };
+    let modelFields = options.resource.fields.map((field) => (!field.hide) ? field.name : null);
+    let states = getStatesForUser(options);
+
+    states.forEach(function (state) {
+        fields[join('states', state, 'createdAt')] = 1;
+        fields[join('states', state, 'createdBy')] = 1;
+        modelFields.forEach(function (field) {
+            fields[join('states', state, 'data', field)] = 1;
+        });
+    });
     return fields;
 };
 
@@ -82,7 +114,7 @@ module.exports.create = function createDoc(options) {
                 let doc = {states: {}};
                 doc.states[state.name] = {
                     createdAt: new Date(),
-                    createdBy: options.user ? options.user.id : null,
+                    createdBy: options.user ? options.user._id : null,
                     data: options.body
                 };
                 resolve(doc);
@@ -102,10 +134,10 @@ module.exports.create = function createDoc(options) {
  */
 module.exports.update = function updateDoc(options) {
     const state = getStateFromOptions(options);
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
         validate(options.resource.model, options.body, state.validate)
             .catch(reject)
-            .then(()=> {
+            .then(() => {
                 let ops = {$set: {}};
                 ops.$set[join('states', state.name)] = {
                     modifiedAt: new Date(),
@@ -133,10 +165,10 @@ module.exports.setState = function setDocState(options) {
 
     const stateTo = getStateFromOptions(options, 'to');
 
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
         validate(options.resource.model, options.doc, stateTo.validate)
             .catch(reject)
-            .then(()=> {
+            .then(() => {
                 let ops = {$rename: {}, $set: {}};
                 ops.$rename[join('states', options.from)] = join('states', options.to);
                 ops.$set.modifiedAt = new Date();
@@ -146,7 +178,7 @@ module.exports.setState = function setDocState(options) {
     });
 };
 
-module.exports.filterUserByEmailOrProviderId = (provider, profile)=> {
+module.exports.filterUserByEmailOrProviderId = (provider, profile) => {
     let query = {$or: []};
     let identityIdFilter = {};
     identityIdFilter['identities.' + provider.name + '.id'] = profile.identity.id;

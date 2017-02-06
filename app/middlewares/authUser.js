@@ -36,24 +36,12 @@ function can(user, method, resource, state) {
     return success;
 }
 
-/**
- * @todo Rename user.role => user.roles
- * @todo refactor
- * @param config
- * @param user
- */
-const isUserAdmin = (config, user)=> {
-    if (!Array.isArray(user.role)) {
-        user.role = [user.role];
-    }
-    console.dir(config.roles);
-    user.role.forEach((role)=> {
-        if (config.roles[role] && config.roles[role].admin) {
-            user.isAdmin = true;
-        }
-    });
-};
 
+function end(req, res, next){
+    return can(req.user, req.method, req.resource, req.state)
+        ? next()
+        : helpers.unauthorized(res);
+}
 /**
  *
  * @param {CampsiServer} server
@@ -67,24 +55,22 @@ module.exports = function authUser(server) {
         let query = {};
         query['token.value'] = token;
         query['token.expiration'] = {$gt: new Date()};
-
         users.findOne(query, (err, user)=> {
             if (err || !user) {
                 return done(err);
             }
-
-            isUserAdmin(server.config, user);
             return done(null, user, {scope: 'all'});
         });
     }));
 
     return (req, res, next)=> {
-        const end = ()=> can(req.user, req.method, req.resource, req.state) ? next() : helpers.unauthorized(res);
-        if (req.headers.authorization) {
+        if (req.headers.authorization || req.query.access_token) {
             //noinspection JSUnresolvedFunction
-            passport.authenticate('bearer', {session: false})(req, res, end);
+            passport.authenticate('bearer', {session: false})(req, res, function(){
+                end(req, res, next);
+            });
         } else {
-            end();
+            end(req, res, next);
         }
     }
 };

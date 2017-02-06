@@ -44,6 +44,7 @@
             }
         },
         "document": {
+            "single": true,
             "states": {
                 "published": {
                     "name": "published",
@@ -100,16 +101,6 @@
                     "submitted": "POST"
                 }
             }
-        }
-    },
-    "users": {
-        "admin@campsi.io": {
-            "name": "Romain Besssuges-Meusy",
-            "role": "admin"
-        },
-        "editor@campsi.io": {
-            "name": "Delphine Dorseuil",
-            "role": "admin"
         }
     },
     "resources": {

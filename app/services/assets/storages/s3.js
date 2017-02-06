@@ -1,7 +1,7 @@
 'use strict';
 
 const aws = require('aws-sdk');
-const AssetStorage = require('./assetStorage');
+const AssetStorage = require('../storage');
 const {PassThrough} = require('stream');
 
 class S3AssetStorage extends AssetStorage {

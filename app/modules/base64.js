@@ -1,9 +1,28 @@
 'use strict';
 
-module.exports.btoa = function (str) {
-    return new Buffer(str).toString('base64');
-};
+function btoa(str) {
+    const buff = new Buffer(str);
+    let encoded;
+    try {
+        encoded = buff.toString('base64');
+    } catch (err) {
+        console.error(err);
+    }
+    return encoded;
+}
 
-module.exports.atob = function (str) {
-    return new Buffer(str, 'base64').toString('binary');
-};
+function atob(str) {
+    if (!str) {
+        return '';
+    }
+    const buff = new Buffer(str, 'base64');
+    let decoded;
+    try {
+        decoded = buff.toString('binary');
+    } catch (err) {
+        console.error(err);
+    }
+    return decoded;
+}
+
+module.exports = {atob, btoa};

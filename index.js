@@ -1,5 +1,9 @@
 'use strict';
-
+const opbeat = require('opbeat').start({
+    appId: 'b70ac7f30f',
+    organizationId: 'bf013b40ffb04bae9b8c946187b455a4',
+    secretToken: '44462ad2772874ba1d156a1486f7d35fecd6c89f'
+});
 
 /**
  @name Resource
@@ -53,7 +57,8 @@
  *
  * @name User
  * @type {Object}
- * @property {String} role
+ * @property {String|Array} role
+ * @property {Boolean} isAdmin
  */
 
 
@@ -155,20 +160,23 @@
 
 const CampsiServer = require('./app/server');
 const config = require('config');
-const path = require('path');
 const commandLineArgs = require('command-line-args');
+const args = commandLineArgs([{name: 'port', alias: 'P', type: Number}]);
+const server = new CampsiServer(config);
+server.app.use(opbeat.middleware.express());
 
-const args = commandLineArgs([
-    {name: 'verbose', alias: 'v', type: Boolean},
-    {name: 'schema', type: String, defaultOption: true},
-    {name: 'port', alias: 'P', type: Number}
-]);
-const schemaFile = args.schema || config.schema;
-const schema = require(path.resolve(__dirname, schemaFile));
-const server = new CampsiServer(schema, config);
-
-server.on('ready', ()=> {
+server.on('ready', () => {
+    console.info('ready');
     server.app.listen(args.port || config.port);
 });
 
+process.on('uncaughtException', function () {
+    console.error('uncaughtException');
+    console.error(arguments);
+});
 
+process.on('unhandledRejection', (reason) => {
+    console.error('unhandledRejection');
+    console.error(reason);
+    process.exit(1);
+});

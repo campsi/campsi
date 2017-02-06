@@ -12,14 +12,15 @@ const defaults = {
  */
 module.exports = function paginateCursor(cursor, query, options) {
     const params = Object.assign({}, defaults, options, query);
-    const skip = (parseInt(params.page) - 1) * parseInt(params.perPage);
+    const page = parseInt(params.page);
+    const skip = (page - 1) * parseInt(params.perPage);
     const limit = parseInt(params.perPage);
     cursor.skip(skip).limit(limit);
     return {
         cursor: cursor,
         skip: skip,
         limit: limit,
-        page: params.page
+        page: page
     }
 };
 

@@ -2,7 +2,7 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const stream = require('stream');
-const AssetStorage = require('./assetStorage');
+const AssetStorage = require('../storage');
 
 class LocalAssetStorage extends AssetStorage {
 

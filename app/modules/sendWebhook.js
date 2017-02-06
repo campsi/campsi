@@ -31,7 +31,7 @@ module.exports = function sendWebhook(req, data) {
                     state: req.state,
                     hook: hook,
                     err: err,
-                    statusCode: res.status
+                    statusCode: res ? res.status : 0
                 });
 
                 return;

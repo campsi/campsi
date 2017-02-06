@@ -1,7 +1,4 @@
 {
-    "name": "relationships",
-    "title": "Relationships Example",
-    "users": { },
     "roles": {
         "admin": {
             "label": "Administrateur",
@@ -23,25 +20,211 @@
             "states": {
                 "published": {
                     "name": "published",
-                    "label": "Published",
-                    "validate": "true"
+                    "label": "En ligne",
+                    "validate": true
+                },
+                "working_draft": {
+                    "name": "working_draft",
+                    "label": "Brouillon",
+                    "validate": false
+                },
+                "archived": {
+                    "name": "archived",
+                    "label": "Archivés",
+                    "validate": false
+                },
+                "private": {
+                    "name": "private",
+                    "label": "Privé",
+                    "validate": false
                 }
             },
             "permissions": {
+                "admin": {
+                    "published": "*",
+                    "working_draft": "*",
+                    "archived": "*"
+                },
                 "public": {
-                    "published": "*"
+                    "published": "GET",
+                    "working_draft": "*"
+                }
+            }
+        },
+        "document": {
+            "defaultState": "draft",
+            "single": true,
+            "states": {
+                "published": {
+                    "name": "published",
+                    "label": "En ligne",
+                    "validate": true
+                },
+                "draft": {
+                    "name": "draft",
+                    "label": "Brouillon",
+                    "validate": false
+                }
+            },
+            "permissions": {
+                "admin": {
+                    "published": "GET,PUT",
+                    "draft": "GET,PUT"
+                },
+                "public": {
+                    "published": "GET"
+                }
+            }
+        },
+        "form": {
+            "defaultState": "submitted",
+            "states": {
+                "submitted": {
+                    "name": "submitted",
+                    "label": "Reçu",
+                    "validate": true
+                },
+                "read": {
+                    "name": "read",
+                    "label": "Lu",
+                    "validate": false
+                },
+                "replied": {
+                    "name": "replied",
+                    "label": "Répondu",
+                    "validate": false
+                },
+                "archived": {
+                    "name": "archived",
+                    "label": "Archivé",
+                    "validate": false
+                }
+            },
+            "permissions": {
+                "admin": {
+                    "read": "*",
+                    "replied": "*",
+                    "submitted": "*",
+                    "archived": "*"
+                },
+                "public": {
+                    "submitted": "POST"
                 }
             }
         }
     },
     "resources": {
+        "pizzas": {
+            "label": "La carte des pizzas",
+            "type": "collection",
+            "fields": [
+                {
+                    "name": "name",
+                    "label": "Nom",
+                    "type": "text",
+                    "required": true
+                },
+                {
+                    "name": "base",
+                    "label": "Base",
+                    "type": "select/dropdown",
+                    "options": [
+                        {
+                            "value": "cream",
+                            "label": "Crême"
+                        },
+                        {
+                            "value": "tomato",
+                            "label": "Tomate"
+                        },
+                        {
+                            "value": "rosé",
+                            "label": "Rosé"
+                        }
+                    ]
+                },
+                {
+                    "name": "ingredients",
+                    "label": "Ingrédients",
+                    "type": "array",
+                    "hide": true,
+                    "items": {
+                        "type": "text"
+                    }
+                },
+                {
+                    "name": "price",
+                    "label": "Prix",
+                    "type": "number"
+                }
+            ]
+        },
+        "contact": {
+            "label": "Formulaire de contact du site web",
+            "type": "form",
+            "fields": [
+                {
+                    "name": "email",
+                    "label": "email",
+                    "type": "text"
+                },
+                {
+                    "name": "message",
+                    "label": "message",
+                    "type": "text/area"
+                }
+            ]
+        },
+        "opening_hours": {
+            "label": "Jours et horaires de contact",
+            "type": "document",
+            "fields": [
+                {
+                    "name": "days",
+                    "label": "Jours d'ouverture",
+                    "type": "checkbox/group",
+                    "values": [
+                        {
+                            "label": "Lundi",
+                            "value": "monday"
+                        },
+                        {
+                            "label": "Mardi",
+                            "value": "tuesday"
+                        },
+                        {
+                            "label": "Mercredi",
+                            "value": "wednesday"
+                        },
+                        {
+                            "label": "Jeudi",
+                            "value": "thursday"
+                        },
+                        {
+                            "label": "Vendredi",
+                            "value": "friday"
+                        },
+                        {
+                            "label": "Samedi",
+                            "value": "saturday"
+                        },
+                        {
+                            "label": "Dimanche",
+                            "value": "sunday"
+                        }
+                    ]
+                }
+            ]
+        },
         "categories": {
             "type": "collection",
             "label": "Categories",
             "webhooks": [
                 {
                     "on": "POST,PUT,DELETE",
-                    "states": ["published"],
+                    "states": [
+                        "published"
+                    ],
                     "uri": "http://127.0.0.1:3001",
                     "method": "POST",
                     "payload": true,
@@ -56,6 +239,7 @@
                 {
                     "type": "text",
                     "name": "label",
+                    "label": "label",
                     "required": true
                 }
             ]
