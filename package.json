@@ -4,7 +4,7 @@
   "description": "Configurable API for managing and publishing document-oriented content",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node index.js"
   },
   "repository": {
@@ -49,10 +49,14 @@
   },
   "devDependencies": {
     "aws-sdk": "^2.7.7",
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5",
     "passport-facebook": "^2.1.1",
     "passport-github2": "^0.1.10",
     "passport-google-oauth20": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "pretty-error": "^2.0.2"
+    "pretty-error": "^2.0.2",
+    "string-format": "^0.5.0"
   }
 }

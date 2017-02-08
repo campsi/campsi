@@ -58,7 +58,6 @@ module.exports.getDocs = function (req, res) {
         return cursor.toArray();
     }).then((docs) => {
         result.docs = docs.map((doc) => {
-            console.info(doc.states);
             const fallbackState = Object.keys(doc.states)[0];
             const currentState = doc.states[req.state] || doc.states[fallbackState];
             return {
@@ -79,7 +78,6 @@ module.exports.getDocs = function (req, res) {
 
 
 module.exports.postDoc = function (req, res) {
-    console.info('post doc state', req.state);
     builder.create({
         user: req.user,
         body: req.body,
@@ -178,7 +176,7 @@ module.exports.getDoc = function (req, res) {
 
 module.exports.delDoc = function (req, res) {
     req.resource.collection.findOneAndDelete(req.filter, (err) => {
-        return helpers.error(res, err) || res.send(200);
+        return helpers.error(res, err) || res.sendStatus(200);
     });
 };
 

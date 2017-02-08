@@ -121,8 +121,7 @@
                 {
                     "name": "name",
                     "label": "Nom",
-                    "type": "text",
-                    "required": true
+                    "type": "text"
                 },
                 {
                     "name": "base",
