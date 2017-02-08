@@ -1,4 +1,5 @@
 # _campsi_/**api**
+[![Build Status](https://travis-ci.org/campsi/api.svg?branch=master)](https://travis-ci.org/campsi/api)
 
 Manage and expose **document-oriented** content through a configurable RESTful **API**. 
 
