@@ -1,6 +1,4 @@
 const path = require('path');
-const mkdirp = require('mkdirp');
-const fs = require('fs');
 const LocalAssetStorage = require('../services/assets/storages/local');
 const host = 'http://localhost:3000';
 const storageProviders = {

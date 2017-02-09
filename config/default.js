@@ -99,7 +99,7 @@ module.exports = {
             options: {
                 clientID: 'GITHUB_CLIENT_ID',
                 clientSecret: 'GITHUB_CLIENT_SECRET',
-                callbackURL: host + "/auth/github/callback"
+                callbackURL: host + '/auth/github/callback'
             },
             scope: ['user', 'gist', 'public_repo'],
             callback: function (req, accessToken, refreshToken, profile, done) {

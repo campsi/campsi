@@ -1,6 +1,9 @@
 # JetBrains
 .idea
 
+# ESLint
+.eslintcache
+
 # Logs
 logs
 *.log

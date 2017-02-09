@@ -7,7 +7,7 @@ const state = require('./state');
 const {btoa} = require('../../lib/modules/base64');
 
 function logout(req, res) {
-    let update = {$set: {token: "null"}};
+    let update = {$set: {token: 'null'}};
     req.db.collection('__users__')
         .findOneAndUpdate({_id: req.user._id}, update).then((result) => {
         return res.json(result);

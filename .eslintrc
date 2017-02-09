@@ -1,0 +1,11 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "extends": "eslint:recommended", // Recommended rules
+  "rules": {
+    "quotes": [2, "single"] // single quotes are better
+  }
+}

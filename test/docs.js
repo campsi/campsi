@@ -93,7 +93,7 @@ describe('Docs', () => {
      */
     describe('/POST docs/pizzas', () => {
         it('it should create a document', (done) => {
-            let data = {"name": "test"};
+            let data = {'name': 'test'};
             chai.request(campsi.app)
                 .post('/docs/pizzas')
                 .set('content-type', 'application/json')
@@ -109,7 +109,7 @@ describe('Docs', () => {
      */
     describe('/POST docs/pizzas/:state', () => {
         it('it should create a document', (done) => {
-            let data = {"name": "test"};
+            let data = {'name': 'test'};
             chai.request(campsi.app)
                 .post('/docs/pizzas/working_draft')
                 .set('content-type', 'application/json')
@@ -133,7 +133,7 @@ describe('Docs', () => {
      */
     describe('/GET docs/pizzas/:id', () => {
         it('it should retreive a document by id', (done) => {
-            let data = {"name": "test"};
+            let data = {'name': 'test'};
             createPizza(data, 'working_draft').then((id) => {
                 chai.request(campsi.app)
                     .get('/docs/pizzas/{0}'.format(id))
@@ -165,7 +165,7 @@ describe('Docs', () => {
      */
     describe('/GET docs/pizzas/:id/:state', () => {
         it('it should retreive a document by id/state', (done) => {
-            let data = {"name": "test"};
+            let data = {'name': 'test'};
             createPizza(data, 'working_draft').then((id) => {
                 chai.request(campsi.app)
                     .get('/docs/pizzas/{0}/working_draft'.format(id))
@@ -197,8 +197,8 @@ describe('Docs', () => {
      */
     describe('/PUT docs/pizzas/:id/:state', () => {
         it('it should modify a document by id/state', (done) => {
-            let data = {"name": "test"};
-            let modifiedData = {"name": "test put", "base": "cream"};
+            let data = {'name': 'test'};
+            let modifiedData = {'name': 'test put', 'base': 'cream'};
             createPizza(data, 'working_draft').then((id) => {
                 async.series([
                     function(cb) {
@@ -256,7 +256,7 @@ describe('Docs', () => {
      */
     describe('/PUT docs/pizzas/:id/state', () => {
         it('it should modify a document state by id', (done) => {
-            let data = {"name": "test"};
+            let data = {'name': 'test'};
             let stateData = {'from': 'working_draft', 'to': 'published'};
             createPizza(data, 'working_draft').then((id) => {
                 chai.request(campsi.app)
@@ -282,7 +282,7 @@ describe('Docs', () => {
      */
     describe('/DELETE docs/pizzas/:id', () => {
         it('it should delete a document by id', (done) => {
-            let data = {"name": "test"};
+            let data = {'name': 'test'};
             createPizza(data, 'working_draft').then((id) => {
                 chai.request(campsi.app)
                     .delete('/docs/pizzas/{0}'.format(id))
