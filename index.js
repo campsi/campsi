@@ -1,9 +1,4 @@
 'use strict';
-const opbeat = require('opbeat').start({
-    appId: 'b70ac7f30f',
-    organizationId: 'bf013b40ffb04bae9b8c946187b455a4',
-    secretToken: '44462ad2772874ba1d156a1486f7d35fecd6c89f'
-});
 
 /**
  @name Resource
@@ -158,25 +153,7 @@ const opbeat = require('opbeat').start({
  * @property {Function} callback
  */
 
-const CampsiServer = require('./app/server');
-const config = require('config');
-const commandLineArgs = require('command-line-args');
-const args = commandLineArgs([{name: 'port', alias: 'P', type: Number}]);
-const server = new CampsiServer(config);
-server.app.use(opbeat.middleware.express());
+const CampsiServer = require('./lib/server');
 
-server.on('ready', () => {
-    console.info('ready');
-    server.app.listen(args.port || config.port);
-});
+module.exports = CampsiServer;
 
-process.on('uncaughtException', function () {
-    console.error('uncaughtException');
-    console.error(arguments);
-});
-
-process.on('unhandledRejection', (reason) => {
-    console.error('unhandledRejection');
-    console.error(reason);
-    process.exit(1);
-});

@@ -1,9 +1,9 @@
-const CampsiService = require('../../service');
+const CampsiService = require('../../lib/service');
 const forIn = require('for-in');
 const local = require('./local');
 const passportMiddleware = require('./passportMiddleware');
 const passport = require('passport');
-const helpers = require('../../modules/responseHelpers');
+const helpers = require('../../lib/modules/responseHelpers');
 const handlers = require('./handlers');
 
 module.exports = class AuthService extends CampsiService {

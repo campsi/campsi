@@ -3,12 +3,12 @@
  */
 'use strict';
 
-const builder = require('../../modules/queryBuilder');
-const helpers = require('../../modules/responseHelpers');
-const embedDocs = require('../../modules/embedDocs');
-const paginateCursor = require('../../modules/paginateCursor');
-const sortCursor = require('../../modules/sortCursor');
-const sendWebhook = require('../../modules/sendWebhook');
+const builder = require('../../lib/modules/queryBuilder');
+const helpers = require('../../lib/modules/responseHelpers');
+const embedDocs = require('../../lib/modules/embedDocs');
+const paginateCursor = require('../../lib/modules/paginateCursor');
+const sortCursor = require('../../lib/modules/sortCursor');
+const sendWebhook = require('../../lib/modules/sendWebhook');
 const forIn = require('for-in');
 
 const onUpdate = (req, res) => (err, result) => {

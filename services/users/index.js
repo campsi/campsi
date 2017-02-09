@@ -1,4 +1,4 @@
-const CampsiService = require('../../service');
+const CampsiService = require('../../lib/service');
 const handlers = require('./handlers');
 module.exports = class UsersService extends CampsiService {
     initialize() {

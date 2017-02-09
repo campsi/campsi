@@ -6,19 +6,26 @@ const async = require('async');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const format = require('string-format');
-const CampsiServer = require('../app/server');
+const CampsiServer = require('..');
 const config = require('config');
-const builder = require('../app/modules/queryBuilder');
+const builder = require('../lib/modules/queryBuilder');
 
 let should = chai.should();
-let server;
+let campsi;
 format.extend(String.prototype);
 chai.use(chaiHttp);
+
+const services = {
+    Docs: require('../services/docs'),
+    Auth: require('../services/auth'),
+    Users: require('../services/users'),
+    Medias: require('../services/assets'),
+};
 
 // Helpers
 function createPizza(data, state) {
     return new Promise(function(resolve, reject) {
-        let resource = server.services.docs.options.schema.resources['pizzas'];
+        let resource = campsi.services.docs.options.schema.resources['pizzas'];
         builder.create({
             user: null,
             body: data,
@@ -37,19 +44,25 @@ function createPizza(data, state) {
 // Our parent block
 describe('Docs', () => {
     beforeEach((done) => { //Before each test we empty the database
-        server = new CampsiServer(config);
-        server.on('ready', () => {
-            server.db.dropDatabase();
+        campsi = new CampsiServer(config.campsi);
+
+        campsi.mount('docs', new services.Docs(config.services.docs));
+        campsi.mount('auth', new services.Auth(config.services.auth));
+        campsi.mount('users', new services.Users(config.services.users));
+        campsi.mount('medias', new services.Medias(config.services.assets));
+        campsi.on('ready', () => {
+            campsi.db.dropDatabase();
             console.info('ready\n');
             done();
         });
+        campsi.start();
     });
     /*
      * Test the /GET docs route
      */
     describe('/GET docs', () => {
         it('it should GET all the ressources', (done) => {
-            chai.request(server.app)
+            chai.request(campsi.app)
                 .get('/docs')
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -63,7 +76,7 @@ describe('Docs', () => {
      */
     describe('/GET docs/pizzas', () => {
         it('it should GET all the documents', (done) => {
-            chai.request(server.app)
+            chai.request(campsi.app)
                 .get('/docs/pizzas')
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -81,7 +94,7 @@ describe('Docs', () => {
     describe('/POST docs/pizzas', () => {
         it('it should create a document', (done) => {
             let data = {"name": "test"};
-            chai.request(server.app)
+            chai.request(campsi.app)
                 .post('/docs/pizzas')
                 .set('content-type', 'application/json')
                 .send(data)
@@ -97,7 +110,7 @@ describe('Docs', () => {
     describe('/POST docs/pizzas/:state', () => {
         it('it should create a document', (done) => {
             let data = {"name": "test"};
-            chai.request(server.app)
+            chai.request(campsi.app)
                 .post('/docs/pizzas/working_draft')
                 .set('content-type', 'application/json')
                 .send(data)
@@ -122,7 +135,7 @@ describe('Docs', () => {
         it('it should retreive a document by id', (done) => {
             let data = {"name": "test"};
             createPizza(data, 'working_draft').then((id) => {
-                chai.request(server.app)
+                chai.request(campsi.app)
                     .get('/docs/pizzas/{0}'.format(id))
                     .end((err, res) => {
                         res.should.have.status(200);
@@ -154,7 +167,7 @@ describe('Docs', () => {
         it('it should retreive a document by id/state', (done) => {
             let data = {"name": "test"};
             createPizza(data, 'working_draft').then((id) => {
-                chai.request(server.app)
+                chai.request(campsi.app)
                     .get('/docs/pizzas/{0}/working_draft'.format(id))
                     .end((err, res) => {
                         res.should.have.status(200);
@@ -189,7 +202,7 @@ describe('Docs', () => {
             createPizza(data, 'working_draft').then((id) => {
                 async.series([
                     function(cb) {
-                        chai.request(server.app)
+                        chai.request(campsi.app)
                             .put('/docs/pizzas/{0}/working_draft'.format(id))
                             .set('content-type', 'application/json')
                             .send(modifiedData)
@@ -206,7 +219,7 @@ describe('Docs', () => {
                             });
                     },
                     function(cb) {
-                        chai.request(server.app)
+                        chai.request(campsi.app)
                             .get('/docs/pizzas/{0}'.format(id))
                             .end((err, res) => {
                                 console.log(res.body.states);
@@ -246,7 +259,7 @@ describe('Docs', () => {
             let data = {"name": "test"};
             let stateData = {'from': 'working_draft', 'to': 'published'};
             createPizza(data, 'working_draft').then((id) => {
-                chai.request(server.app)
+                chai.request(campsi.app)
                     .put('/docs/pizzas/{0}/state'.format(id))
                     .set('content-type', 'application/json')
                     .send(stateData)
@@ -271,7 +284,7 @@ describe('Docs', () => {
         it('it should delete a document by id', (done) => {
             let data = {"name": "test"};
             createPizza(data, 'working_draft').then((id) => {
-                chai.request(server.app)
+                chai.request(campsi.app)
                     .delete('/docs/pizzas/{0}'.format(id))
                     .end((err, res) => {
                         console.log(res.body);
@@ -283,7 +296,7 @@ describe('Docs', () => {
             });
         });
         it('it should return an error when document doesn\'t exist', (done) => {
-            chai.request(server.app)
+            chai.request(campsi.app)
                 .delete('/docs/pizzas/589acbcda5756516b07cb18f')
                 .end((err, res) => {
                     console.log(res.body);
@@ -294,7 +307,7 @@ describe('Docs', () => {
                 });
         });
         it('it should return an error when document id is malformed', (done) => {
-            chai.request(server.app)
+            chai.request(campsi.app)
                 .delete('/docs/pizzas/589acbcda57')
                 .end((err, res) => {
                     console.log(res.body);

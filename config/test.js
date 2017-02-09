@@ -1,7 +1,7 @@
 const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
-const LocalAssetStorage = require('../app/services/assets/storages/local');
+const LocalAssetStorage = require('../services/assets/storages/local');
 const host = 'http://localhost:3000';
 const storageProviders = {
     local: new LocalAssetStorage({
@@ -14,9 +14,11 @@ const storageProviders = {
 
 module.exports = {
     port: 3000,
-    mongoURI: 'mongodb://localhost:27017/relationships',
     host: host,
     title: 'Test Arezzo',
+    campsi: {
+        mongoURI: 'mongodb://localhost:27017/relationships',
+    },
     services: {
         users: {
             title: 'Utilisateurs',
@@ -28,7 +30,7 @@ module.exports = {
             // todo users: 'users'
             options: {
                 providers: {
-                    local: require('../app/services/auth/providers/local')({
+                    local: require('../services/auth/providers/local')({
                         baseUrl: host + '/auth',
                         salt: 'CNDygyeFC6536964425994'
                     })

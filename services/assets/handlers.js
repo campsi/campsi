@@ -1,9 +1,9 @@
 const async = require('async');
 const path = require('path');
-const helpers = require('../../modules/responseHelpers');
-const createObjectID = require('../../modules/createObjectID');
-const paginateCursor = require('../../modules/paginateCursor');
-const sortCursor = require('../../modules/sortCursor');
+const helpers = require('../../lib/modules/responseHelpers');
+const createObjectID = require('../../lib/modules/createObjectID');
+const paginateCursor = require('../../lib/modules/paginateCursor');
+const sortCursor = require('../../lib/modules/sortCursor');
 const http = require('http');
 
 

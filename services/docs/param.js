@@ -1,5 +1,5 @@
-const helpers = require('../../modules/responseHelpers');
-const createObjectID = require('../../modules/createObjectID');
+const helpers = require('../../lib/modules/responseHelpers');
+const createObjectID = require('../../lib/modules/createObjectID');
 module.exports = function onResourceParam(schema) {
     return (req, res, next) => {
         if (req.params.resource) {

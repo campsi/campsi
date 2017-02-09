@@ -29,11 +29,11 @@ Manage and expose **document-oriented** content through a configurable RESTful *
 - [x] Generate invitation tokens by role
 - [x] PassportJS integration
 - [x] Custom authentification providers
-    - [x] [Local Database](app/modules/auth/local.js)
-    - [x] [Facebook](app/modules/auth/facebook.js)
-    - [x] [Twitter](app/modules/auth/twitter.js)
-    - [x] [Github](app/modules/auth/github.js)
-    - [x] [Google](app/modules/auth/google.js)
+    - [x] [Local Database](lib/modules/auth/local.js)
+    - [x] [Facebook](lib/modules/auth/facebook.js)
+    - [x] [Twitter](lib/modules/auth/twitter.js)
+    - [x] [Github](lib/modules/auth/github.js)
+    - [x] [Google](lib/modules/auth/google.js)
 - [ ] Rate limiter
 
 #### Other
@@ -44,8 +44,8 @@ Manage and expose **document-oriented** content through a configurable RESTful *
 - [X] Stream based upload system
 - [X] Filtered and paginated GET route
 - [X] Custom storage adapters
-  - [X] [Local storage with rotating subfolders](app/modules/assets/localAssetStorage.js)
-  - [X] [Amazon S3](app/modules/assets/s3AssetStorage.js)
+  - [X] [Local storage with rotating subfolders](lib/modules/assets/localAssetStorage.js)
+  - [X] [Amazon S3](lib/modules/assets/s3AssetStorage.js)
   - [ ] Azure Blob Storage
   - [ ] Google Cloud Platform
 - [ ] GraphicsMagick Metadata recognition
