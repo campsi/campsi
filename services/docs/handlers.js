@@ -3,6 +3,7 @@
  */
 'use strict';
 
+const debug = require('debug')('campsi');
 const builder = require('./modules/queryBuilder');
 const helpers = require('../../lib/modules/responseHelpers');
 const embedDocs = require('./modules/embedDocs');
@@ -71,7 +72,7 @@ module.exports.getDocs = function (req, res) {
         });
         return embedDocs.many(req, result.docs);
     }).then(() => res.json(result)).catch((err) => {
-        console.error(err);
+        debug('Error: %s', err);
         res.json({});
     });
 };

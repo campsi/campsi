@@ -1,3 +1,4 @@
+const debug = require('debug')('campsi');
 const editURL = require('edit-url');
 const {atob, btoa} = require('./modules/base64');
 
@@ -10,7 +11,7 @@ function getState(req) {
             decoded = atob(req.query.state);
             state = JSON.parse(decoded);
         } catch (err) {
-            console.error('wrong state parameter, must be base64 encoded JSON object');
+            debug('wrong state parameter, must be base64 encoded JSON object');
         }
     }
     else if (req.session.state) {
@@ -40,7 +41,6 @@ module.exports.serialize = function (req) {
 
     const json = JSON.stringify(state);
 
-    console.info('serialize', state, json);
     if (json !== '{}') {
         req.session.state = state;
         req.query.state = btoa(JSON.stringify(state));

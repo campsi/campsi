@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('campsi');
 const forIn = require('for-in');
 
 function join(...properties) {
@@ -33,8 +34,8 @@ function validate(model, doc, doValidate) {
             return resolve();
         }
         model.setValue(doc, function () {
-            console.dir(model.errors);
             if (model.errors.length > 0) {
+                debug('model have %d errors', model.errors.length);
                 return reject(model.errors);
             }
             resolve();

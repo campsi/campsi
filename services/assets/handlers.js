@@ -1,3 +1,4 @@
+const debug = require('debug')('campsi');
 const async = require('async');
 const path = require('path');
 const helpers = require('../../lib/modules/responseHelpers');
@@ -12,7 +13,6 @@ function coll(req) {
 }
 
 module.exports.postAssets = function postAssets(req, res) {
-    console.info('post assets');
     const assets = coll(req);
 
     if (!req.files || !req.files.length) {
@@ -24,7 +24,7 @@ module.exports.postAssets = function postAssets(req, res) {
         const storage = req.assetsOptions.getStorage(file);
 
         function onError(err) {
-            console.error(err);
+            debug('Error: %s', err);
             file.error = true;
             cb();
         }
@@ -74,7 +74,7 @@ module.exports.getAssets = function getAssets(req, res) {
         result.assets = docs;
         res.json(result);
     }).catch((err) => {
-        console.error(err);
+        debug('Error: %s', err);
         res.json({});
     });
 };
@@ -103,7 +103,7 @@ module.exports.streamAsset = function streamAsset(req, res) {
         res.writeHead(newRes.statusCode, headers);
         newRes.pipe(res);
     }).on('error', function (err) {
-        console.error(err);
+        debug('Error: %s', err);
         res.statusCode = 500;
         res.end();
     });
@@ -145,7 +145,7 @@ module.exports.paramAsset = function (req, res, next, id) {
         req.asset = asset;
         next();
     }).catch((err) => {
-        console.error(err);
+        debug('Error: %s', err);
         helpers.notFound(res);
     });
 };

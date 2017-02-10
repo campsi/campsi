@@ -2,6 +2,7 @@
 process.env.NODE_ENV = 'test';
 
 //Require the dev-dependencies
+const debug = require('debug')('campsi');
 const async = require('async');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -52,10 +53,12 @@ describe('Docs', () => {
         campsi.mount('medias', new services.Medias(config.services.assets));
         campsi.on('ready', () => {
             campsi.db.dropDatabase();
-            console.info('ready\n');
             done();
         });
-        campsi.start();
+        campsi.start()
+            .catch((err) => {
+                debug('Error: %s', err);
+            });
     });
     /*
      * Test the /GET docs route
@@ -119,7 +122,6 @@ describe('Docs', () => {
                     res.body.should.be.a('object');
                     res.body.state.should.be.eq('working_draft');
                     res.body.should.have.property('id');
-                    console.info('Object {0} have been created'.format(res.body.id));
                     res.body.should.have.property('createdAt');
                     res.body.should.have.property('createdBy');
                     res.body.should.have.property('data');
@@ -222,7 +224,6 @@ describe('Docs', () => {
                         chai.request(campsi.app)
                             .get('/docs/pizzas/{0}'.format(id))
                             .end((err, res) => {
-                                console.log(res.body.states);
                                 res.should.have.status(200);
                                 res.body.should.be.a('object');
                                 res.body.should.have.property('id');
@@ -287,7 +288,6 @@ describe('Docs', () => {
                 chai.request(campsi.app)
                     .delete('/docs/pizzas/{0}'.format(id))
                     .end((err, res) => {
-                        console.log(res.body);
                         res.should.have.status(200);
                         res.body.should.be.json();
                         res.body.should.be.a('object');
@@ -299,7 +299,6 @@ describe('Docs', () => {
             chai.request(campsi.app)
                 .delete('/docs/pizzas/589acbcda5756516b07cb18f')
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.be.json();
                     res.body.should.be.a('object');
@@ -310,7 +309,6 @@ describe('Docs', () => {
             chai.request(campsi.app)
                 .delete('/docs/pizzas/589acbcda57')
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.be.json();
                     res.body.should.be.a('object');

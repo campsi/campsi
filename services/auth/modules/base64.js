@@ -1,4 +1,5 @@
 'use strict';
+const debug = require('debug')('campsi');
 
 function btoa(str) {
     const buff = new Buffer(str);
@@ -6,7 +7,7 @@ function btoa(str) {
     try {
         encoded = buff.toString('base64');
     } catch (err) {
-        console.error(err);
+        debug('Error: %s', err);
     }
     return encoded;
 }
@@ -20,7 +21,7 @@ function atob(str) {
     try {
         decoded = buff.toString('binary');
     } catch (err) {
-        console.error(err);
+        debug('Error: %s', err);
     }
     return decoded;
 }

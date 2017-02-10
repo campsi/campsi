@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('campsi');
 const request = require('request');
 
 /**
@@ -24,18 +25,18 @@ module.exports = function sendWebhook(req, data) {
             body: data
         }, (err, res, body) => {
             if (err || String(res.statusCode)[0] !== '2') {
-                console.error({
+                debug('Webhook error: %s [%s] %s', req.method, req.state, err);
+                /*console.error({
                     message: 'webhook error',
                     method: req.method,
                     state: req.state,
                     hook: hook,
                     err: err,
                     statusCode: res ? res.status : 0
-                });
+                });*/
 
                 return;
             }
-            console.info(body);
         });
     });
 };
