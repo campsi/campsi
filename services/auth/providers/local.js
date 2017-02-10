@@ -15,5 +15,5 @@ module.exports = function (options) {
             verify: true,
             salt: options.salt
         }
-    }
+    };
 };

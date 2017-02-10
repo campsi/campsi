@@ -15,7 +15,7 @@ module.exports.middleware = function (localProvider) {
         req.authProvider = localProvider;
         state.serialize(req);
         next();
-    }
+    };
 };
 
 module.exports.signin = function (req, res) {

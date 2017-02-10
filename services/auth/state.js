@@ -10,7 +10,7 @@ function getState(req) {
             decoded = atob(req.query.state);
             state = JSON.parse(decoded);
         } catch (err) {
-            console.error('wrong state parameter, must be base64 encoded JSON object')
+            console.error('wrong state parameter, must be base64 encoded JSON object');
         }
     }
     else if (req.session.state) {

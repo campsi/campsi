@@ -32,7 +32,7 @@ module.exports = function (options) {
                 email: profile.emails[0].value,
                 picture: profile._json.avatar_url,
                 identity: profile._json
-            })
+            });
         }
-    }
+    };
 };

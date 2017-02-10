@@ -156,7 +156,7 @@ module.exports.getDoc = function (req, res) {
 
     req.resource.collection.findOne(req.filter, fields, (err, doc) => {
         if (doc === null) {
-            return helpers.notFound(res)
+            return helpers.notFound(res);
         }
 
         const currentState = doc.states[req.state] || {};

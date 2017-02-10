@@ -72,11 +72,11 @@ module.exports.getAssets = function getAssets(req, res) {
         return cursor.toArray();
     }).then((docs) => {
         result.assets = docs;
-        res.json(result)
+        res.json(result);
     }).catch((err) => {
         console.error(err);
         res.json({});
-    })
+    });
 };
 
 module.exports.sendLocalFile = function sendLocalFile(req, res) {
@@ -117,7 +117,7 @@ module.exports.getUploadForm = function getUploadForm(req, res) {
         '<input type="file" multiple="multiple" name="file"><br>' +
         '<input type="submit" name="submit"><br>' +
         '</form>' +
-        '</body></html>')
+        '</body></html>');
 };
 
 
@@ -134,7 +134,7 @@ module.exports.deleteAsset = function deleteAsset(req, res) {
     req.storage.deleteAsset(req.asset)
         .then(() => coll(req).deleteOne({_id: req.asset._id}))
         .then((result) => res.json(result))
-        .catch((err) => helpers.error(res, err))
+        .catch((err) => helpers.error(res, err));
 };
 
 module.exports.paramAsset = function (req, res, next, id) {

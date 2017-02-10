@@ -28,7 +28,7 @@ module.exports = function (options) {
                 email: profile._json.emails[0].value,
                 picture: profile._json.image.url,
                 identity: profile._json
-            })
+            });
         }
-    }
+    };
 };

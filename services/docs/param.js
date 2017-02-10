@@ -32,5 +32,5 @@ module.exports = function onResourceParam(schema) {
             return helpers.notFound(res);
         }
         next();
-    }
+    };
 };

@@ -61,7 +61,7 @@ module.exports = {
                     email: profile._json.emails[0].value,
                     picture: profile._json.image.url,
                     identity: profile._json
-                })
+                });
             }
         },
         facebook: {
@@ -85,7 +85,7 @@ module.exports = {
                     email: profile._json.email,
                     picture: profile.picture,
                     identity: profile._json
-                })
+                });
             }
         },
         github: {
@@ -108,7 +108,7 @@ module.exports = {
                     email: profile.emails[0].value,
                     picture: profile._json.avatar_url,
                     identity: profile._json
-                })
+                });
             }
         }
     }

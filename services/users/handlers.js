@@ -5,7 +5,7 @@ module.exports.getInvitation = function (req, res) {
     req.db.collection('__invitations__')
         .findOne({_id: createObjectID(req.params.invitation)})
         .then((invitation) => {
-            return helpers.json(res, invitation)
+            return helpers.json(res, invitation);
         })
         .catch((err) => helpers.error(res, err));
 };

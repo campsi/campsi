@@ -27,5 +27,5 @@ module.exports = function (options) {
                 identity: profile._json
             });
         }
-    }
+    };
 };

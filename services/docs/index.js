@@ -41,7 +41,7 @@ module.exports = class DocsService extends CampsiService {
                     cb();
                 });
             }, resolve);
-        })
+        });
     }
 
     describe() {
@@ -54,7 +54,7 @@ module.exports = class DocsService extends CampsiService {
                 name: resource.path,
                 type: resource.type,
                 fields: resource.fields
-            }
+            };
         });
         return desc;
     }

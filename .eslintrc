@@ -6,6 +6,7 @@
   },
   "extends": "eslint:recommended", // Recommended rules
   "rules": {
-    "quotes": [2, "single"] // single quotes are better
+    "quotes": [2, "single"], // single quotes are better
+    "semi": [2, "always"]
   }
 }

@@ -11,7 +11,7 @@ class LocalAssetStorage extends AssetStorage {
     }
 
     get dataPath() {
-        return this.options.dataPath
+        return this.options.dataPath;
     }
 
     store(file) {

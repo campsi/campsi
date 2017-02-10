@@ -32,7 +32,7 @@ function getProviders(req, res) {
     });
 
     ret.sort((a, b) => a.order - b.order);
-    res.json(ret)
+    res.json(ret);
 }
 
 
@@ -57,7 +57,7 @@ function callback(req, res) {
 
         req.session.destroy(() => {
             //console.info('session destroyed');
-        })
+        });
     });
 }
 

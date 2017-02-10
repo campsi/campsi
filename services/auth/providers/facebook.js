@@ -34,7 +34,7 @@ module.exports = function (options) {
                 email: profile._json.email,
                 picture: profile.picture,
                 identity: profile._json
-            })
+            });
         }
-    }
+    };
 };

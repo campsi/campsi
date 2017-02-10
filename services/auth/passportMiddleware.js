@@ -70,7 +70,7 @@ function genInsert(provider, profile, update) {
 }
 
 function deleteInvitation(db, invitation) {
-    return db.collection('__invitations__').findOneAndDelete({_id: invitation._id})
+    return db.collection('__invitations__').findOneAndDelete({_id: invitation._id});
 }
 
 
@@ -94,7 +94,7 @@ module.exports = function passportMiddleware(req) {
                     }
 
                     let insert = genInsert(provider, profile, update);
-                    return users.insertOne(insert).then((insertResult) => passportCallback(null, insertResult.ops[0]))
+                    return users.insertOne(insert).then((insertResult) => passportCallback(null, insertResult.ops[0]));
                 }).catch(passportCallback);
         });
     });

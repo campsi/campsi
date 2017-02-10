@@ -16,7 +16,7 @@ class S3AssetStorage extends AssetStorage {
     }
 
     get dataPath() {
-        return this.options.dataPath
+        return this.options.dataPath;
     }
 
     store(file) {
@@ -51,7 +51,7 @@ class S3AssetStorage extends AssetStorage {
                 file.url = data.Location;
                 self.emit('uploadSuccess', file);
             });
-        })
+        });
     }
 
 
@@ -60,7 +60,7 @@ class S3AssetStorage extends AssetStorage {
             this.s3.deleteObject({
                 Bucket: this.options.bucket,
                 Key: file.key
-            }, (err, result) => err ? reject(err) : resolve())
+            }, (err, result) => err ? reject(err) : resolve());
         });
     }
 }
