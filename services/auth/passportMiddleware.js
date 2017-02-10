@@ -1,6 +1,6 @@
-const findCallback = require('../../lib/modules/findCallback');
+const findCallback = require('./modules/findCallback');
 const createObjectID = require('../../lib/modules/createObjectID');
-const builder = require('../../lib/modules/queryBuilder');
+const builder = require('./modules/queryBuilder');
 const uuid = require('uuid');
 const state = require('./state');
 

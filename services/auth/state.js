@@ -1,5 +1,5 @@
 const editURL = require('edit-url');
-const {atob, btoa} = require('../../lib/modules/base64');
+const {atob, btoa} = require('./modules/base64');
 
 function getState(req) {
     let state = {};

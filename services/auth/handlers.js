@@ -4,7 +4,7 @@ const forIn = require('for-in');
 const passport = require('passport');
 const editURL = require('edit-url');
 const state = require('./state');
-const {btoa} = require('../../lib/modules/base64');
+const {btoa} = require('./modules/base64');
 
 function logout(req, res) {
     let update = {$set: {token: 'null'}};

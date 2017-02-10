@@ -8,7 +8,7 @@ const chaiHttp = require('chai-http');
 const format = require('string-format');
 const CampsiServer = require('..');
 const config = require('config');
-const builder = require('../lib/modules/queryBuilder');
+const builder = require('../services/docs/modules/queryBuilder');
 
 let should = chai.should();
 let campsi;
