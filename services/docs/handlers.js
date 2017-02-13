@@ -97,6 +97,30 @@ module.exports.postDoc = function (req, res) {
     }).catch(helpers.validationError(res));
 };
 
+// get all states of a document
+module.exports.getDocState = function (req, res) {
+    const fields = builder.getStates({
+        resource: req.resource,
+        user: req.user,
+        query: req.query,
+        state: req.state
+    });
+
+    req.resource.collection.findOne(req.filter, fields, (err, doc) => {
+        if (doc === null) {
+            return helpers.notFound(res);
+        }
+
+        const returnValue = {
+            id: doc._id,
+            states: doc.states,
+        };
+
+        helpers.json(res, returnValue);
+    });
+};
+
+// modify the state of a doc
 module.exports.putDocState = function (req, res) {
 
     const doSetState = function () {
@@ -146,7 +170,7 @@ module.exports.putDoc = function (req, res) {
     });
 };
 
-
+// get a doc
 module.exports.getDoc = function (req, res) {
     const fields = builder.select({
         resource: req.resource,
@@ -159,12 +183,15 @@ module.exports.getDoc = function (req, res) {
         if (doc === null) {
             return helpers.notFound(res);
         }
+        if (doc.states[req.state] === undefined) {
+            return helpers.notFound(res);
+        }
 
         const currentState = doc.states[req.state] || {};
         const returnValue = {
             id: doc._id,
             state: req.state,
-            states: doc.states,
+            //states: doc.states,
             createdAt: currentState.createdAt,
             createdBy: currentState.createdBy,
             modifiedAt: currentState.modifiedAt,

@@ -67,8 +67,10 @@ function getStatesForUser(options) {
         let permission = options.resource.permissions[role];
         states.forEach(function (state) {
             if (permission && permission[state] && (
-                permission[state].indexOf(options.method)
-                || permission[state] === '*')
+                !options.method
+                || permission[state] === '*'
+                || permission[state].indexOf(options.method)
+                )
             ) {
                 allowed.push(state);
             }
@@ -151,6 +153,21 @@ module.exports.update = function updateDoc(options) {
 };
 
 module.exports.delete = function deleteDoc() {
+};
+
+module.exports.getStates = function getDocStates(options) {
+    let fields = {
+        _id: 1,
+    };
+    let states = getStatesForUser(options);
+
+    states.forEach(function (state) {
+        fields[join('states', state, 'createdAt')] = 1;
+        fields[join('states', state, 'createdBy')] = 1;
+        fields[join('states', state, 'modifiedAt')] = 1;
+        fields[join('states', state, 'modifiedBy')] = 1;
+    });
+    return fields;
 };
 
 /**

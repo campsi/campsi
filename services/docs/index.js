@@ -20,6 +20,7 @@ module.exports = class DocsService extends CampsiService {
         this.router.param('resource', param(schema));
         this.router.get('/', handlers.getResources);
         this.router.get('/:resource', handlers.getDocs);
+        this.router.get('/:resource/:id/state', handlers.getDocState);
         this.router.get('/:resource/:id/:state', handlers.getDoc);
         this.router.get('/:resource/:id', handlers.getDoc);
         this.router.post('/:resource/:state', handlers.postDoc);

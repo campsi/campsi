@@ -2,7 +2,7 @@
 process.env.NODE_ENV = 'test';
 
 //Require the dev-dependencies
-const debug = require('debug')('campsi');
+const debug = require('debug')('campsi:test');
 const async = require('async');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -69,6 +69,7 @@ describe('Docs', () => {
                 .get('/docs')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     done();
                 });
@@ -83,6 +84,7 @@ describe('Docs', () => {
                 .get('/docs/pizzas')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     res.body.count.should.be.eq(0);
                     res.body.docs.should.be.a('array');
@@ -103,6 +105,9 @@ describe('Docs', () => {
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(403);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
                     done();
                 });
         });
@@ -119,6 +124,7 @@ describe('Docs', () => {
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     res.body.state.should.be.eq('working_draft');
                     res.body.should.have.property('id');
@@ -134,29 +140,16 @@ describe('Docs', () => {
      * Test the /GET docs/pizzas/:id route
      */
     describe('/GET docs/pizzas/:id', () => {
-        it('it should retreive a document by id', (done) => {
+        it('it should return a 404 error', (done) => {
             let data = {'name': 'test'};
             createPizza(data, 'working_draft').then((id) => {
                 chai.request(campsi.app)
                     .get('/docs/pizzas/{0}'.format(id))
                     .end((err, res) => {
-                        res.should.have.status(200);
+                        res.should.have.status(404);
+                        res.should.be.json;
                         res.body.should.be.a('object');
-                        res.body.should.have.property('id');
-                        res.body.id.should.be.eq(id.toString());
-                        res.body.should.have.property('state');
-                        res.body.state.should.be.eq('working_draft');
-                        res.body.should.have.property('data');
-                        res.body.data.should.be.eql(data);
-                        res.body.should.have.property('states');
-                        res.body.states.should.be.a('object');
-                        res.body.states.should.have.property('working_draft');
-                        res.body.states.working_draft.should.be.a('object');
-                        res.body.states.working_draft.should.have.property('createdAt');
-                        res.body.states.working_draft.should.have.property('createdBy');
-                        should.equal(res.body.states.working_draft.createdBy, null);
-                        res.body.states.working_draft.should.have.property('data');
-                        res.body.states.working_draft.data.should.be.eql(data);
+                        res.body.should.have.property('message');
                         done();
                     });
             });
@@ -173,6 +166,7 @@ describe('Docs', () => {
                     .get('/docs/pizzas/{0}/working_draft'.format(id))
                     .end((err, res) => {
                         res.should.have.status(200);
+                        res.should.be.json;
                         res.body.should.be.a('object');
                         res.body.should.have.property('id');
                         res.body.id.should.be.eq(id.toString());
@@ -180,15 +174,16 @@ describe('Docs', () => {
                         res.body.state.should.be.eq('working_draft');
                         res.body.should.have.property('data');
                         res.body.data.should.be.eql(data);
-                        res.body.should.have.property('states');
-                        res.body.states.should.be.a('object');
-                        res.body.states.should.have.property('working_draft');
-                        res.body.states.working_draft.should.be.a('object');
-                        res.body.states.working_draft.should.have.property('createdAt');
-                        res.body.states.working_draft.should.have.property('createdBy');
-                        should.equal(res.body.states.working_draft.createdBy, null);
-                        res.body.states.working_draft.should.have.property('data');
-                        res.body.states.working_draft.data.should.be.eql(data);
+                        //TODO : states with params
+                        //res.body.should.have.property('states');
+                        //res.body.states.should.be.a('object');
+                        //res.body.states.should.have.property('working_draft');
+                        //res.body.states.working_draft.should.be.a('object');
+                        //res.body.states.working_draft.should.have.property('createdAt');
+                        //res.body.states.working_draft.should.have.property('createdBy');
+                        //should.equal(res.body.states.working_draft.createdBy, null);
+                        //res.body.states.working_draft.should.have.property('data');
+                        //res.body.states.working_draft.data.should.be.eql(data);
                         done();
                     });
             });
@@ -210,6 +205,7 @@ describe('Docs', () => {
                             .send(modifiedData)
                             .end((err, res) => {
                                 res.should.have.status(200);
+                                res.should.be.json;
                                 res.body.should.be.a('object');
                                 res.body.should.have.property('id');
                                 res.body.id.should.be.eq(id.toString());
@@ -225,6 +221,7 @@ describe('Docs', () => {
                             .get('/docs/pizzas/{0}'.format(id))
                             .end((err, res) => {
                                 res.should.have.status(200);
+                                res.should.be.json;
                                 res.body.should.be.a('object');
                                 res.body.should.have.property('id');
                                 res.body.id.should.be.eq(id.toString());
@@ -253,6 +250,32 @@ describe('Docs', () => {
         });
     });
     /*
+     * Test the /GET docs/pizzas/:id/state route
+     */
+    describe('/GET docs/pizzas/:id/state', () => {
+        it('it should return all documents states', (done) => {
+            let data = {'name': 'test'};
+            createPizza(data, 'working_draft').then((id) => {
+                chai.request(campsi.app)
+                    .get('/docs/pizzas/{0}/state'.format(id))
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.should.be.json;
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('id');
+                        res.body.id.should.be.eq(id.toString());
+                        res.body.should.have.property('states');
+                        res.body.states.should.be.a('object');
+                        res.body.states.should.have.property('working_draft');
+                        res.body.states.working_draft.should.have.property('createdAt');
+                        res.body.states.working_draft.should.have.property('createdBy');
+                        should.equal(res.body.states.working_draft.createdBy, null);
+                        done();
+                    });
+            });
+        });
+    });
+    /*
      * Test the /PUT docs/pizzas/:id/state route
      */
     describe('/PUT docs/pizzas/:id/state', () => {
@@ -266,6 +289,7 @@ describe('Docs', () => {
                     .send(stateData)
                     .end((err, res) => {
                         res.should.have.status(200);
+                        res.should.be.json;
                         res.body.should.be.a('object');
                         res.body.should.have.property('id');
                         res.body.id.should.be.eq(id.toString());
@@ -289,7 +313,7 @@ describe('Docs', () => {
                     .delete('/docs/pizzas/{0}'.format(id))
                     .end((err, res) => {
                         res.should.have.status(200);
-                        res.body.should.be.json();
+                        res.body.should.be.json;
                         res.body.should.be.a('object');
                         done();
                     });
@@ -300,7 +324,7 @@ describe('Docs', () => {
                 .delete('/docs/pizzas/589acbcda5756516b07cb18f')
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.json();
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     done();
                 });
@@ -310,7 +334,7 @@ describe('Docs', () => {
                 .delete('/docs/pizzas/589acbcda57')
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.json();
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     done();
                 });
