@@ -95,7 +95,7 @@ describe('Docs', () => {
      * Test the /POST docs/pizzas route
      */
     describe('/POST docs/pizzas', () => {
-        it('it should create a document', (done) => {
+        it('it should not create a document (no credentials for default state)', (done) => {
             let data = {'name': 'test'};
             chai.request(campsi.app)
                 .post('/docs/pizzas')
@@ -108,7 +108,7 @@ describe('Docs', () => {
         });
     });
     /*
-     * Test the /POST docs/pizzas route
+     * Test the /POST docs/pizzas/:state route
      */
     describe('/POST docs/pizzas/:state', () => {
         it('it should create a document', (done) => {
@@ -145,9 +145,9 @@ describe('Docs', () => {
                         res.body.should.have.property('id');
                         res.body.id.should.be.eq(id.toString());
                         res.body.should.have.property('state');
-                        //res.body.state.should.be.eq('working_draft');
+                        res.body.state.should.be.eq('working_draft');
                         res.body.should.have.property('data');
-                        //res.body.data.should.be.eql(data);
+                        res.body.data.should.be.eql(data);
                         res.body.should.have.property('states');
                         res.body.states.should.be.a('object');
                         res.body.states.should.have.property('working_draft');
@@ -177,9 +177,9 @@ describe('Docs', () => {
                         res.body.should.have.property('id');
                         res.body.id.should.be.eq(id.toString());
                         res.body.should.have.property('state');
-                        //res.body.state.should.be.eq('working_draft');
+                        res.body.state.should.be.eq('working_draft');
                         res.body.should.have.property('data');
-                        //res.body.data.should.be.eql(data);
+                        res.body.data.should.be.eql(data);
                         res.body.should.have.property('states');
                         res.body.states.should.be.a('object');
                         res.body.states.should.have.property('working_draft');
@@ -195,7 +195,7 @@ describe('Docs', () => {
         });
     });
     /*
-     * Test the /PUT docs/pizzas/:id route
+     * Test the /PUT docs/pizzas/:id/:state route
      */
     describe('/PUT docs/pizzas/:id/:state', () => {
         it('it should modify a document by id/state', (done) => {
@@ -229,19 +229,19 @@ describe('Docs', () => {
                                 res.body.should.have.property('id');
                                 res.body.id.should.be.eq(id.toString());
                                 res.body.should.have.property('state');
-                                //res.body.state.should.be.eq('working_draft');
+                                res.body.state.should.be.eq('working_draft');
                                 res.body.should.have.property('data');
-                                //res.body.data.should.be.eql(data);
+                                res.body.data.should.be.eql(data);
                                 res.body.should.have.property('states');
                                 res.body.states.should.be.a('object');
                                 res.body.states.should.have.property('working_draft');
                                 res.body.states.working_draft.should.be.a('object');
-                                //res.body.states.working_draft.should.have.property('createdAt');
-                                //res.body.states.working_draft.should.have.property('createdBy');
-                                //should.equal(res.body.states.working_draft.createdBy, null);
-                                //res.body.states.working_draft.should.have.property('modifyAt');
-                                //res.body.states.working_draft.should.have.property('modifiedBy');
-                                //should.equal(res.body.states.working_draft.modifiedBy, null);
+                                res.body.states.working_draft.should.have.property('createdAt');
+                                res.body.states.working_draft.should.have.property('createdBy');
+                                should.equal(res.body.states.working_draft.createdBy, null);
+                                res.body.states.working_draft.should.have.property('modifyAt');
+                                res.body.states.working_draft.should.have.property('modifiedBy');
+                                should.equal(res.body.states.working_draft.modifiedBy, null);
                                 res.body.states.working_draft.should.have.property('data');
                                 res.body.states.working_draft.data.should.be.eql(modifiedData);
                                 done();

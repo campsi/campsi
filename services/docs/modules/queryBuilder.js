@@ -89,6 +89,8 @@ module.exports.select = function select(options) {
     states.forEach(function (state) {
         fields[join('states', state, 'createdAt')] = 1;
         fields[join('states', state, 'createdBy')] = 1;
+        fields[join('states', state, 'modifiedAt')] = 1;
+        fields[join('states', state, 'modifiedBy')] = 1;
         modelFields.forEach(function (field) {
             fields[join('states', state, 'data', field)] = 1;
         });
@@ -140,11 +142,9 @@ module.exports.update = function updateDoc(options) {
             .catch(reject)
             .then(() => {
                 let ops = {$set: {}};
-                ops.$set[join('states', state.name)] = {
-                    modifiedAt: new Date(),
-                    modifiedBy: options.user ? options.user.id : null,
-                    data: options.body
-                };
+                ops.$set[join('states', state.name, 'modifiedAt')] = new Date();
+                ops.$set[join('states', state.name, 'modifiedBy')] = options.user ? options.user.id : null;
+                ops.$set[join('states', state.name, 'data')] = options.body;
                 return resolve(ops);
             });
     });

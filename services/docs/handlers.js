@@ -167,6 +167,8 @@ module.exports.getDoc = function (req, res) {
             states: doc.states,
             createdAt: currentState.createdAt,
             createdBy: currentState.createdBy,
+            modifiedAt: currentState.modifiedAt,
+            modifiedBy: currentState.modifiedBy,
             data: currentState.data || {},
         };
 
