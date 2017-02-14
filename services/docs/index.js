@@ -29,6 +29,7 @@ module.exports = class DocsService extends CampsiService {
         this.router.put('/:resource/:id/:state', handlers.putDoc);
         this.router.put('/:resource/:id', handlers.putDoc);
         this.router.delete('/:resource/:id', handlers.delDoc);
+        this.router.delete('/:resource/:id/:state', handlers.delDoc);
 
         return new Promise((resolve) => {
             async.eachOf(schema.resources, function (resource, name, cb) {

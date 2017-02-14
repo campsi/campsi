@@ -205,9 +205,25 @@ module.exports.getDoc = function (req, res) {
 };
 
 module.exports.delDoc = function (req, res) {
-    req.resource.collection.findOneAndDelete(req.filter, (err) => {
-        return helpers.error(res, err) || res.sendStatus(200);
+    const statePath = ['states', req.state].join('.');
+    let updateParams = {$unset: {}};
+    updateParams.$unset[statePath] = '';
+    req.resource.collection.findOneAndUpdate(req.filter, updateParams, (err, out) => {
+        if (err) {
+            return helpers.error(err);
+        }
+        if (out.lastErrorObject.n === 0) {
+            return helpers.notFound(res);
+        }
+        let filter = {};
+        filter._id = out.value._id;
+        filter.states = {};
+        req.resource.collection.findOneAndDelete(filter, () => {
+            return helpers.json(res, {'message': 'OK'});
+        });
     });
+
+
 };
 
 

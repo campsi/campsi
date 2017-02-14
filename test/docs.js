@@ -292,17 +292,17 @@ describe('Docs', () => {
         });
     });
     /*
-     * Test the /DELETE docs/pizzas/:id route
+     * Test the /DELETE docs/pizzas/:id/state route
      */
-    describe('/DELETE docs/pizzas/:id', () => {
+    describe('/DELETE docs/pizzas/:id/state', () => {
         it('it should delete a document by id', (done) => {
             let data = {'name': 'test'};
             createPizza(data, 'working_draft').then((id) => {
                 chai.request(campsi.app)
-                    .delete('/docs/pizzas/{0}'.format(id))
+                    .delete('/docs/pizzas/{0}/working_draft'.format(id))
                     .end((err, res) => {
                         res.should.have.status(200);
-                        res.body.should.be.json;
+                        res.should.be.json;
                         res.body.should.be.a('object');
                         done();
                     });
@@ -310,7 +310,7 @@ describe('Docs', () => {
         });
         it('it should return an error when document doesn\'t exist', (done) => {
             chai.request(campsi.app)
-                .delete('/docs/pizzas/589acbcda5756516b07cb18f')
+                .delete('/docs/pizzas/589acbcda5756516b07cb18f/working_draft')
                 .end((err, res) => {
                     res.should.have.status(404);
                     res.should.be.json;
@@ -321,7 +321,7 @@ describe('Docs', () => {
         });
         it('it should return an error when document id is malformed', (done) => {
             chai.request(campsi.app)
-                .delete('/docs/pizzas/589acbcda57')
+                .delete('/docs/pizzas/589acbcda57/working_draft')
                 .end((err, res) => {
                     res.should.have.status(400);
                     res.should.be.json;
