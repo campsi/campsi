@@ -60,7 +60,7 @@ class S3AssetStorage extends AssetStorage {
             this.s3.deleteObject({
                 Bucket: this.options.bucket,
                 Key: file.key
-            }, (err, result) => err ? reject(err) : resolve());
+            }, (err) => err ? reject(err) : resolve());
         });
     }
 }

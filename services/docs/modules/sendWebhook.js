@@ -23,7 +23,7 @@ module.exports = function sendWebhook(req, data) {
             uri: hook.uri,
             json: true,
             body: data
-        }, (err, res, body) => {
+        }, (err, res) => {
             if (err || String(res.statusCode)[0] !== '2') {
                 debug('Webhook error: %s [%s] %s', req.method, req.state, err);
                 /*console.error({

@@ -43,7 +43,7 @@ module.exports = {
                 order: ['local'],
                 fallback: 'local',
                 //todo copy / backup
-                getStorage: (file) => storageProviders.local,
+                getStorage: () => storageProviders.local,
                 storages: storageProviders
             }
         },

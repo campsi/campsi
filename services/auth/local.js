@@ -47,8 +47,7 @@ module.exports.signup = function (req, res) {
         .catch((err) => handlers.redirectWithError(req, res, err));
 };
 
-module.exports.resetPassword = function (req, res) {
-};
+module.exports.resetPassword = function () {};
 
 module.exports.callback = function localCallback(req, username, password, done) {
     let filter = {};

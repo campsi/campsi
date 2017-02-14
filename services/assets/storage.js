@@ -4,11 +4,11 @@ class AssetStorage {
         this.options = options;
     }
 
-    store(file) {
+    store() {
 
     }
 
-    deleteAsset(file) {
+    deleteAsset() {
 
     }
 }
