@@ -52,7 +52,7 @@ module.exports = function onResourceParam(schema) {
             if (req.params.id) {
                 req.filter = {_id: createObjectID(req.params.id)};
                 if(!req.filter._id){
-                    return helpers.badRequest(res);
+                    return helpers.error(res, {message: 'Can\'t recognize id'});
                 }
             }
         }
