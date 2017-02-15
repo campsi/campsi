@@ -6,7 +6,6 @@ const campsi = require('campsi-core');
 const forIn = require('for-in');
 require('campsi-base-components');
 
-
 module.exports = class DocsService extends CampsiService {
     initialize() {
 

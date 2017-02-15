@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  @name Resource
  @type {Object}
@@ -23,7 +21,6 @@
  * @property {String} name
  * @property {String} title
  */
-
 
 /**
  * @name Role
@@ -55,7 +52,6 @@
  * @property {String|Array} role
  * @property {Boolean} isAdmin
  */
-
 
 /**
  * @name Webhook
@@ -156,4 +152,3 @@
 const CampsiServer = require('./lib/server');
 
 module.exports = CampsiServer;
-

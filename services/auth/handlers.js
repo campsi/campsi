@@ -35,7 +35,6 @@ function getProviders(req, res) {
     res.json(ret);
 }
 
-
 function callback(req, res) {
     const {redirectURI} = state.get(req);
     //noinspection JSUnresolvedFunction
@@ -69,7 +68,6 @@ function redirectWithError(req, res) {
         res.redirect(editURL(redirectURI, (obj) => obj.query.error = true));
     }
 }
-
 
 /**
  * Entry point of the authentification workflow.

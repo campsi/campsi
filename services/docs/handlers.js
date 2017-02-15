@@ -1,7 +1,6 @@
 /**
  * Created by romain on 06/12/2016.
  */
-'use strict';
 
 const debug = require('debug')('campsi');
 const builder = require('./modules/queryBuilder');
@@ -76,7 +75,6 @@ module.exports.getDocs = function (req, res) {
         res.json({});
     });
 };
-
 
 module.exports.postDoc = function (req, res) {
     builder.create({
@@ -222,10 +220,7 @@ module.exports.delDoc = function (req, res) {
             return helpers.json(res, {'message': 'OK'});
         });
     });
-
-
 };
-
 
 module.exports.getResources = function (req, res) {
     let result = {resources: []};

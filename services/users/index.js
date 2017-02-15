@@ -9,4 +9,3 @@ module.exports = class UsersService extends CampsiService {
         return super.initialize();
     }
 };
-

@@ -7,7 +7,6 @@ const paginateCursor = require('../../lib/modules/paginateCursor');
 const sortCursor = require('../../lib/modules/sortCursor');
 const http = require('http');
 
-
 function coll(req) {
     return req.db.collection('__assets__');
 }
@@ -120,11 +119,9 @@ module.exports.getUploadForm = function getUploadForm(req, res) {
         '</body></html>');
 };
 
-
 module.exports.getAssetMetadata = function getAssetMetadata(req, res) {
     res.json(req.asset);
 };
-
 
 /**
  * @param {ExpressRequest} req

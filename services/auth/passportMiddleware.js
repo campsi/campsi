@@ -73,7 +73,6 @@ function deleteInvitation(db, invitation) {
     return db.collection('__invitations__').findOneAndDelete({_id: invitation._id});
 }
 
-
 module.exports = function passportMiddleware(req) {
     const users = req.db.collection('__users__');
     const provider = req.authProvider;

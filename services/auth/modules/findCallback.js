@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function findCallback(args) {
     let i = 0;
     for (; i < args.length; i++) {
