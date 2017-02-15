@@ -3,6 +3,13 @@ node_js:
   - 6
 services:
   - mongodb
+addons:
+  apt:
+    sources:
+      - sourceline: 'deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse'
+        key_url": 'http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x0C49F3730359A14518585931BC711F9BA15703C6'
+    packages:
+      - mongodb-org-server
 before_script:
   - sleep 15
 script:
