@@ -170,11 +170,16 @@ module.exports.putDoc = function (req, res) {
 
 // get a doc
 module.exports.getDoc = function (req, res) {
+    let states = req.query.states;
+    if(!Array.isArray(states)) {
+        states = [states];
+    }
     const fields = builder.select({
+        method: 'GET',
         resource: req.resource,
         user: req.user,
         query: req.query,
-        state: req.state
+        state: states
     });
 
     req.resource.collection.findOne(req.filter, fields, (err, doc) => {

@@ -4,6 +4,9 @@
     "mocha": true,
     "es6": true
   },
+  "plugins": [
+    "indexof"
+  ],
   "extends": "eslint:recommended", // Recommended rules
   "rules": {
     "quotes": [2, "single"], // single quotes are better
@@ -17,6 +20,7 @@
     "eol-last": [2, "always"],
     "no-unsafe-negation": [2],
     "eqeqeq": [2, "smart"],
-    "strict": [2, "never"]
+    "strict": [2, "never"],
+    "indexof/no-indexof": [2]
   }
 }

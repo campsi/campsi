@@ -47,7 +47,7 @@ module.exports.find = function find(options) {
 
     if (options.query) {
         forIn(options.query, (val, prop) => {
-            if (prop.indexOf('data.') === 0) {
+            if (prop.startsWith('data.')) {
                 filter[join('states', state.name, prop)] = val;
             }
         });
@@ -67,7 +67,7 @@ function getStatesForUser(options) {
             if (permission && permission[state] && (
                 !options.method
                 || permission[state] === '*'
-                || permission[state].indexOf(options.method)
+                || permission[state].includes(options.method)
                 )
             ) {
                 allowed.push(state);

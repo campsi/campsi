@@ -39,7 +39,7 @@ function embedDocs(req, doc, hash) {
         let error;
         async.eachOf(req.resource.rels || {}, (relationship, name, cb)=> {
 
-            const embedRel = (relationship.embed || (req.query.embed && req.query.embed.indexOf(name) > -1));
+            const embedRel = (relationship.embed || (req.query.embed && req.query.embed.includes(name)));
             if (!embedRel) {
                 return async.setImmediate(cb);
             }

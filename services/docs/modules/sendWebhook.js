@@ -8,10 +8,10 @@ const request = require('request');
 module.exports = function sendWebhook(req, data) {
     let hooks = req.resource.webhooks || [];
     hooks.forEach((hook)=> {
-        if (hook.on.indexOf(req.method) === -1 && hook.on !== '*') {
+        if (!hook.on.includes(req.method) && hook.on !== '*') {
             return;
         }
-        if (hook.states.indexOf(req.state) === -1) {
+        if (!hook.states.includes(req.state)) {
             return;
         }
 

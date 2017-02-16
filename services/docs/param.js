@@ -17,7 +17,7 @@ function can(user, method, resource, state) {
 
     roles.forEach((role)=> {
         let permission = resource.permissions[role][state];
-        if (permission && (permission.indexOf(method) > -1 || permission === '*')) {
+        if (permission && (permission.includes(method) || permission === '*')) {
             success = true;
         }
     });
