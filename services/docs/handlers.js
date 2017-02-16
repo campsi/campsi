@@ -170,16 +170,17 @@ module.exports.putDoc = function (req, res) {
 
 // get a doc
 module.exports.getDoc = function (req, res) {
-    let states = req.query.states;
-    if(!Array.isArray(states)) {
-        states = [states];
-    }
+    let requestedStates = req.query.states;
+    requestedStates = requestedStates === '' ? Object.keys(req.resource.states) : requestedStates;
+    requestedStates = requestedStates === undefined ? [] : requestedStates;
+    requestedStates = Array.isArray(requestedStates) ? requestedStates : [requestedStates];
+
     const fields = builder.select({
         method: 'GET',
         resource: req.resource,
         user: req.user,
         query: req.query,
-        state: states
+        state: [...new Set(requestedStates.concat(req.state))]
     });
 
     req.resource.collection.findOne(req.filter, fields, (err, doc) => {
@@ -194,13 +195,21 @@ module.exports.getDoc = function (req, res) {
         const returnValue = {
             id: doc._id,
             state: req.state,
-            //states: doc.states,
             createdAt: currentState.createdAt,
             createdBy: currentState.createdBy,
             modifiedAt: currentState.modifiedAt,
             modifiedBy: currentState.modifiedBy,
             data: currentState.data || {},
         };
+
+        if(requestedStates.length > 0) {
+            returnValue.states = Object.keys(doc.states)
+                .filter(docState => requestedStates.includes(docState))
+                .reduce((displayStates, displayState) => {
+                    displayStates[displayState] = doc.states[displayState];
+                    return displayStates;
+                }, {});
+        }
 
         embedDocs.one(req, returnValue.data)
             .then(() => helpers.json(res, returnValue));

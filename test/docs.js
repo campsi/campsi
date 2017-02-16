@@ -174,16 +174,57 @@ describe('Docs', () => {
                         res.body.state.should.be.eq('working_draft');
                         res.body.should.have.property('data');
                         res.body.data.should.be.eql(data);
-                        //TODO : states with params
-                        //res.body.should.have.property('states');
-                        //res.body.states.should.be.a('object');
-                        //res.body.states.should.have.property('working_draft');
-                        //res.body.states.working_draft.should.be.a('object');
-                        //res.body.states.working_draft.should.have.property('createdAt');
-                        //res.body.states.working_draft.should.have.property('createdBy');
-                        //should.equal(res.body.states.working_draft.createdBy, null);
-                        //res.body.states.working_draft.should.have.property('data');
-                        //res.body.states.working_draft.data.should.be.eql(data);
+                        res.body.should.not.have.property('states');
+                        done();
+                    });
+            });
+        });
+        it('it should retreive a document by id/state with states', (done) => {
+            let data = {'name': 'test'};
+            createPizza(data, 'working_draft').then((id) => {
+                chai.request(campsi.app)
+                    .get('/docs/pizzas/{0}/working_draft?states='.format(id))
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.should.be.json;
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('id');
+                        res.body.id.should.be.eq(id.toString());
+                        res.body.should.have.property('state');
+                        res.body.state.should.be.eq('working_draft');
+                        res.body.should.have.property('data');
+                        res.body.data.should.be.eql(data);
+                        res.body.should.have.property('states');
+                        res.body.states.should.be.a('object');
+                        res.body.states.should.have.property('working_draft');
+                        res.body.states.working_draft.should.be.a('object');
+                        res.body.states.working_draft.should.have.property('createdAt');
+                        res.body.states.working_draft.should.have.property('createdBy');
+                        should.equal(res.body.states.working_draft.createdBy, null);
+                        res.body.states.working_draft.should.have.property('data');
+                        res.body.states.working_draft.data.should.be.eql(data);
+                        done();
+                    });
+            });
+        });
+        it('it should retreive a document by id/state with states empty', (done) => {
+            let data = {'name': 'test'};
+            createPizza(data, 'working_draft').then((id) => {
+                chai.request(campsi.app)
+                    .get('/docs/pizzas/{0}/working_draft?states=published'.format(id))
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.should.be.json;
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('id');
+                        res.body.id.should.be.eq(id.toString());
+                        res.body.should.have.property('state');
+                        res.body.state.should.be.eq('working_draft');
+                        res.body.should.have.property('data');
+                        res.body.data.should.be.eql(data);
+                        res.body.should.have.property('states');
+                        res.body.states.should.be.a('object');
+                        res.body.states.should.be.eql({});
                         done();
                     });
             });
