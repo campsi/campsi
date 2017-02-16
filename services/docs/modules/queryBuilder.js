@@ -83,7 +83,12 @@ module.exports.select = function select(options) {
     let fields = {
         _id: 1,
     };
-    let modelFields = options.resource.fields.map((field) => (!field.hide) ? field.name : null);
+    let modelFields = options.resource.fields.reduce((result, field) => {
+        if(!field.hide) {
+            result.push(field.name);
+        }
+        return result;
+    }, []);
     let states = getStatesForUser(options);
 
     states.forEach(function (state) {
@@ -95,6 +100,7 @@ module.exports.select = function select(options) {
             fields[join('states', state, 'data', field)] = 1;
         });
     });
+
     return fields;
 };
 
