@@ -227,9 +227,7 @@ module.exports.delDoc = function (req, res) {
         if (out.lastErrorObject.n === 0) {
             return helpers.notFound(res);
         }
-        let filter = {};
-        filter._id = out.value._id;
-        filter.states = {};
+        let filter = builder.deleteFilter({id: out.value._id});
         req.resource.collection.findOneAndDelete(filter, () => {
             return helpers.json(res, {'message': 'OK'});
         });

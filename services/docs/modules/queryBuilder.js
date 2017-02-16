@@ -150,7 +150,11 @@ module.exports.update = function updateDoc(options) {
     });
 };
 
-module.exports.delete = function deleteDoc() {
+module.exports.deleteFilter = function deleteDoc(options) {
+    let filter = {};
+    filter._id = options.id;
+    filter.states = {};
+    return filter;
 };
 
 module.exports.getStates = function getDocStates(options) {
@@ -192,17 +196,4 @@ module.exports.setState = function setDocState(options) {
                 return resolve(ops);
             });
     });
-};
-
-module.exports.filterUserByEmailOrProviderId = (provider, profile) => {
-    let query = {$or: []};
-    let identityIdFilter = {};
-    identityIdFilter['identities.' + provider.name + '.id'] = profile.identity.id;
-    query.$or.push(identityIdFilter);
-
-    if (profile.email) {
-        query.$or.push({email: profile.email});
-    }
-
-    return query;
 };
