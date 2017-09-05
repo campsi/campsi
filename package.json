@@ -4,6 +4,7 @@
   "description": "Configurable API for managing and publishing document-oriented content",
   "main": "index.js",
   "scripts": {
+    "depcheck": "depcheck",
     "lint": "./node_modules/eslint/bin/eslint.js --cache ./lib ./services ./config ./test index.js"
   },
   "repository": {
@@ -27,16 +28,11 @@
     "for-in": "^0.1.6",
     "mongodb": "^2.2.11",
     "passport": "^0.3.2",
-    "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0"
+    "passport-http-bearer": "^1.0.1"
   },
   "devDependencies": {
     "eslint": "^3.15.0",
-    "eslint-plugin-indexof": "^0.1.1",
-    "passport-facebook": "^2.1.1",
-    "passport-github2": "^0.1.10",
-    "passport-google-oauth20": "^1.0.0",
-    "passport-twitter": "^1.0.4"
+    "eslint-plugin-indexof": "^0.1.1"
   },
   "files": [
     "LICENSE",
