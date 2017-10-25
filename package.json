@@ -26,9 +26,7 @@
     "express": "^4.14.0",
     "express-session": "^1.14.2",
     "for-in": "^0.1.6",
-    "mongodb": "^2.2.11",
-    "passport": "^0.3.2",
-    "passport-http-bearer": "^1.0.1"
+    "mongodb": "^2.2.11"
   },
   "devDependencies": {
     "eslint": "^3.15.0",
