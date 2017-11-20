@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const express = require('express');
 const buildLink = require('../lib/modules/buildLink');
+const createObjectID = require('../lib/modules/createObjectID');
 const format = require('string-format');
 
 chai.use(chaiHttp);
@@ -11,7 +12,7 @@ const {URL} = require('url');
 
 describe('Unit Test', function(){
     describe('buildLink module', function(){
-        it('should be the executed Route', function(done){
+        it('should return the correct url', function(done){
             var app = express();
 
             app.get('/test', function(req, res) {
@@ -34,6 +35,20 @@ describe('Unit Test', function(){
                     url.searchParams.has('dont').should.equal(false);
                     done();
                 });
+        });
+    });
+
+    describe('createObjectID module', function(){
+        it('should return a correct objectID', function(done){
+            const oid = createObjectID('507f1f77bcf86cd799439011');
+            oid.should.be.a('object');
+            done();
+        });
+
+        it('should return an incorrect objectID', function(done){
+            const oid = createObjectID('507f1f77bcf86cd79943901');
+            (typeof oid).should.be.equal('undefined');
+            done();
         });
     });
 });
