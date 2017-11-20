@@ -13,3 +13,7 @@ before_script:
   - sleep 15
 script:
   - npm run lint
+  - npm run depcheck
+  - npm run test
+after_success:
+  - npm run coveralls
