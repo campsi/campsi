@@ -1,4 +1,6 @@
 # _campsi_/**api**
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/campsi/campsi.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/campsi/campsi.svg?branch=master)](https://travis-ci.org/campsi/campsi)
 
 Manage and expose **document-oriented** content through a configurable RESTful **API**. 
