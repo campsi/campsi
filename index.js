@@ -80,7 +80,6 @@
  * @type {Object}
  * @property {Number} port
  * @property {String} schema Path of the schema file
- * @property {String} mongoURI
  * @property {String} host
  * @property {Object<String,Object>} handlers
  * @property {CampsiServerConfig~AssetsOptions} handlers.assets.options
