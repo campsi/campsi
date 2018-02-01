@@ -10,7 +10,7 @@ format.extend(String.prototype);
 chai.should();
 const {URL} = require('url');
 
-describe('Unit Test', function(){
+describe('Modules Test', function(){
     describe('buildLink module', function(){
         it('should return the correct url', function(done){
             var app = express();
