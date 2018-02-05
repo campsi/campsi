@@ -1,3 +1,6 @@
+process.env.NODE_CONFIG_DIR = './test/config';
+process.env.NODE_ENV = 'test';
+
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const express = require('express');
