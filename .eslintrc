@@ -7,20 +7,20 @@
   "plugins": [
     "indexof"
   ],
-  "extends": "eslint:recommended", // Recommended rules
+  "extends": [
+    "eslint:recommended",
+    "standard"
+  ],
   "rules": {
-    "quotes": [2, "single"], // single quotes are better
-    "semi": [2, "always"],
-    "max-len": [2, 120],
-    "max-lines": [2, 400],
-    "max-statements": [2, 20],
-    "no-tabs": [2],
-    "linebreak-style": [2, "unix"],
-    "no-multiple-empty-lines": [2, {"max": 1, "maxEOF": 0, "maxBOF": 0}],
-    "eol-last": [2, "always"],
-    "no-unsafe-negation": [2],
-    "eqeqeq": [2, "smart"],
-    "strict": [2, "never"],
-    "indexof/no-indexof": [2]
+    // Exception
+    "semi": ["error", "always"],
+    // Format xtras
+    "max-len": ["error", 120],
+    "max-lines": ["error", 400],
+    "max-statements": ["error", 20],
+    "linebreak-style": ["error", "unix"],
+    // Other xtras
+    "strict": ["error", "never"],
+    "indexof/no-indexof": ["error"]
   }
 }
