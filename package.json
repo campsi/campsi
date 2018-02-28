@@ -7,7 +7,7 @@
     "cover": "istanbul --include-all-sources cover _mocha \"./test/**/!(index).js\" -- --exit",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "depcheck": "depcheck --ignores=path,mocha,mocha-lcov-reporter",
-    "lint": "./node_modules/eslint/bin/eslint.js --cache lib/** test/**",
+    "lint": "./node_modules/eslint/bin/eslint.js --cache lib/** test/** index.js",
     "test": "mocha \"./test/**/!(index).js\" --exit"
   },
   "repository": {
