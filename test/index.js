@@ -1,5 +1,6 @@
 process.env.NODE_CONFIG_DIR = './config';
 process.env.NODE_ENV = 'test';
+process.env.CAMPSI_DEBUG = '1';
 
 const CampsiServer = require('../lib/server');
 const CampsiService = require('../lib/service');
@@ -28,8 +29,9 @@ campsi.on('auth/local/passwordResetTokenCreated', user => {
   debug('passwordResetTokenCreated', user.identities.local.passwordResetToken);
 });
 
-process.on('uncaughtException', function () {
-  debug('uncaughtException');
+process.on('uncaughtException', (reason, p) => {
+  debug('Uncaught Rejection at:', p, 'reason:', reason);
+  process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, p) => {
