@@ -24,7 +24,7 @@
     "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
-    "debug": "^3.1.0",
+    "debug": "^4.0.0",
     "express": "^4.16.2",
     "for-in": "^1.0.2",
     "mongo-uri-builder": "^1.0.3",
