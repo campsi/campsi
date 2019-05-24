@@ -28,7 +28,7 @@
     "express": "^4.16.2",
     "for-in": "^1.0.2",
     "mongo-uri-builder": "^1.0.3",
-    "mongodb": "^3.0.3",
+    "mongodb": "^3.2.6",
     "mqtt-emitter": "^1.2.4"
   },
   "devDependencies": {
