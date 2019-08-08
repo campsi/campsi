@@ -29,7 +29,7 @@
     "for-in": "^1.0.2",
     "mongo-uri-builder": "^1.0.3",
     "mongodb": "^3.0.3",
-    "mqtt-emitter": "^1.2.4"
+    "mqtt-emitter": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
