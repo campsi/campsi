@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/campsi/api#readme",
   "dependencies": {
-    "async": "^2.6.0",
+    "async": "^3.2.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "debug": "^3.1.0",
